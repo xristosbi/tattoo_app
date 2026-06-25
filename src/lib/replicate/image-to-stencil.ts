@@ -1,23 +1,26 @@
 import sharp from 'sharp'
 
-/**
- * Converts an image buffer to a tattoo stencil using edge detection.
- * Steps: greyscale → gaussian blur (denoise) → Laplacian edges → normalise → threshold → invert
- * Result: crisp black linework on white background.
- */
 export async function imageBufferToStencil(imageBuffer: Buffer): Promise<Buffer> {
-  return sharp(imageBuffer)
+  // Step 1: max contrast greyscale + edge detection
+  const edgeBuf = await sharp(imageBuffer)
     .greyscale()
     .normalise()
-    .blur(0.6) // light denoise before edge detection
+    .linear(2.0, -60) // aggressive contrast boost before edge detection
+    .blur(0.5)
     .convolve({
       width: 3,
       height: 3,
       kernel: [-1, -1, -1, -1, 8, -1, -1, -1, -1], // Laplacian
     })
     .normalise()
-    .threshold(18) // edges → white, background → black
-    .negate()       // invert: black lines on white background
+    .threshold(15)  // low threshold = more edges captured → white
+    .negate()       // → black lines on white background
+    .toBuffer()
+
+  // Step 2: dilate (thicken) lines by blurring black then re-thresholding
+  return sharp(edgeBuf)
+    .blur(1.8)        // spreads black lines into grey halo
+    .threshold(210)   // anything not near-white → black (bold thick lines)
     .png()
     .toBuffer()
 }
