@@ -1,18 +1,23 @@
-import replicate from './client'
+import sharp from 'sharp'
 
-export async function createImageToStencilPrediction(imageUrl: string) {
-  return await replicate.predictions.create({
-    model: 'black-forest-labs/flux-dev',
-    input: {
-      image: imageUrl,
-      prompt:
-        'tattoo stencil, black ink linework on pure white background, bold clean lines, high contrast, no color fills, no shading, crisp outlines only, suitable for tattooing',
-      strength: 0.8,
-      num_inference_steps: 28,
-      guidance_scale: 3.5,
-      num_outputs: 1,
-      output_format: 'png',
-      output_quality: 95,
-    },
-  })
+/**
+ * Converts an image buffer to a tattoo stencil using edge detection.
+ * Steps: greyscale → gaussian blur (denoise) → Laplacian edges → normalise → threshold → invert
+ * Result: crisp black linework on white background.
+ */
+export async function imageBufferToStencil(imageBuffer: Buffer): Promise<Buffer> {
+  return sharp(imageBuffer)
+    .greyscale()
+    .normalise()
+    .blur(0.6) // light denoise before edge detection
+    .convolve({
+      width: 3,
+      height: 3,
+      kernel: [-1, -1, -1, -1, 8, -1, -1, -1, -1], // Laplacian
+    })
+    .normalise()
+    .threshold(18) // edges → white, background → black
+    .negate()       // invert: black lines on white background
+    .png()
+    .toBuffer()
 }
