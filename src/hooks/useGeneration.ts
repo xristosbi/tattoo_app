@@ -100,15 +100,7 @@ export function useGeneration(): UseGenerationReturn {
         return
       }
 
-      // Image-to-stencil is synchronous — returns 200 with stencilUrl directly
-      if (res.status === 200 && data.stencilUrl) {
-        setGenerationId(data.generationId ?? null)
-        setStencilUrl(data.stencilUrl)
-        setState('completed')
-        return
-      }
-
-      // Text-to-stencil is async — poll for result
+      // Both paths are async — poll for result
       setGenerationId(data.generationId)
       setState('processing')
       startPolling(data.generationId)

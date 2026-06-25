@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
-import { getStencilSignedUrl } from '@/lib/storage'
+import { uploadStencilFromUrl, getStencilSignedUrl } from '@/lib/storage'
 import { incrementQuota } from '@/lib/quota'
 import { imageBufferToStencil } from '@/lib/replicate/image-to-stencil'
 import replicate from '@/lib/replicate/client'
@@ -41,10 +41,10 @@ export async function GET(
 
   try {
     const prediction = await replicate.predictions.get(generation.replicate_id)
-    const meta = generation.metadata as Record<string, unknown>
 
     if (prediction.status === 'failed' || prediction.error) {
       const errorMsg = String(prediction.error ?? 'Replicate prediction failed')
+      console.error('[poll] prediction failed:', errorMsg)
       await adminSupabase
         .from('generations')
         .update({ status: 'failed', error_message: errorMsg })
@@ -56,38 +56,61 @@ export async function GET(
       return NextResponse.json({ status: 'processing' })
     }
 
-    // flux-schnell produced a base image — now convert to stencil with sharp
-    const output = prediction.output as string[] | string
-    const imageUrl = Array.isArray(output) ? output[0] : output
+    // text-to-stencil step1: flux-schnell produced a base image
+    // pass it through sharp edge detection to get stencil linework
+    const meta = generation.metadata as Record<string, unknown>
+    if (generation.type === 'text_to_stencil' && meta.pipeline_step === 'step1') {
+      const output = prediction.output as string[] | string
+      const imageUrl = Array.isArray(output) ? output[0] : output
 
-    if (!imageUrl) {
+      if (!imageUrl) {
+        await adminSupabase
+          .from('generations')
+          .update({ status: 'failed', error_message: 'No output from text generation' })
+          .eq('id', generation.id)
+        return NextResponse.json({ status: 'failed', error: 'No image generated' })
+      }
+
+      // Download and convert to stencil with sharp
+      const imgRes = await fetch(imageUrl)
+      if (!imgRes.ok) throw new Error('Failed to download generated image')
+      const inputBuffer = Buffer.from(await imgRes.arrayBuffer())
+      const stencilBuffer = await imageBufferToStencil(inputBuffer)
+
+      const outputPath = `${user.id}/${generation.id}.png`
+      const { error: uploadError } = await adminSupabase.storage
+        .from('stencils')
+        .upload(outputPath, stencilBuffer, { contentType: 'image/png', upsert: true })
+
+      if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`)
+
       await adminSupabase
         .from('generations')
-        .update({ status: 'failed', error_message: 'No output from generation' })
+        .update({ status: 'completed', output_storage_path: outputPath, metadata: { ...meta, pipeline_step: 'done' } })
         .eq('id', generation.id)
-      return NextResponse.json({ status: 'failed', error: 'No image generated' })
+
+      await incrementQuota(adminSupabase, generation.quota_owner_id)
+      const stencilUrl = await getStencilSignedUrl(adminSupabase, outputPath)
+      return NextResponse.json({ status: 'completed', stencilUrl })
     }
 
-    // Download the generated image and convert to stencil
-    const imgRes = await fetch(imageUrl)
-    if (!imgRes.ok) throw new Error('Failed to download generated image')
-    const inputBuffer = Buffer.from(await imgRes.arrayBuffer())
-    const stencilBuffer = await imageBufferToStencil(inputBuffer)
+    // image-to-stencil: controlnet-scribble output is already the stencil
+    const output = prediction.output as string[] | string
+    const outputUrl = Array.isArray(output) ? output[0] : output
 
-    const outputPath = `${user.id}/${generation.id}.png`
-    const { error: uploadError } = await adminSupabase.storage
-      .from('stencils')
-      .upload(outputPath, stencilBuffer, { contentType: 'image/png', upsert: true })
+    if (!outputUrl) {
+      await adminSupabase
+        .from('generations')
+        .update({ status: 'failed', error_message: 'No output from stencil generation' })
+        .eq('id', generation.id)
+      return NextResponse.json({ status: 'failed', error: 'No stencil generated' })
+    }
 
-    if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`)
+    const outputPath = await uploadStencilFromUrl(adminSupabase, user.id, generation.id, outputUrl)
 
     await adminSupabase
       .from('generations')
-      .update({
-        status: 'completed',
-        output_storage_path: outputPath,
-        metadata: { ...meta, pipeline_step: 'done' },
-      })
+      .update({ status: 'completed', output_storage_path: outputPath })
       .eq('id', generation.id)
 
     await incrementQuota(adminSupabase, generation.quota_owner_id)

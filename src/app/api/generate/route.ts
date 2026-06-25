@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
-import { checkQuota, incrementQuota } from '@/lib/quota'
-import { getStencilSignedUrl } from '@/lib/storage'
-import { imageBufferToStencil } from '@/lib/replicate/image-to-stencil'
+import { checkQuota } from '@/lib/quota'
+import { createImageToStencilPrediction } from '@/lib/replicate/image-to-stencil'
 import { createTextToImagePrediction } from '@/lib/replicate/text-to-stencil'
 
 export const maxDuration = 60
@@ -51,49 +50,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'File too large (max 10MB)' }, { status: 413 })
     }
 
-    // IMAGE-TO-STENCIL: process synchronously with sharp (no Replicate)
-    if (type === 'image_to_stencil' && file) {
-      const inputBuffer = Buffer.from(await file.arrayBuffer())
-      const stencilBuffer = await imageBufferToStencil(inputBuffer)
-
-      const outputPath = `${user.id}/${crypto.randomUUID()}.png`
-      const { error: uploadError } = await adminSupabase.storage
-        .from('stencils')
-        .upload(outputPath, stencilBuffer, { contentType: 'image/png', upsert: false })
-
-      if (uploadError) {
-        return NextResponse.json({ error: `Upload failed: ${uploadError.message}` }, { status: 500 })
-      }
-
-      const { data: generation } = await adminSupabase
-        .from('generations')
-        .insert({
-          user_id: user.id,
-          quota_owner_id: quotaOwnerId,
-          type: 'image_to_stencil',
-          status: 'completed',
-          output_storage_path: outputPath,
-          metadata: { pipeline_step: 'single' },
-        })
-        .select()
-        .single()
-
-      await incrementQuota(adminSupabase, quotaOwnerId)
-
-      const stencilUrl = await getStencilSignedUrl(adminSupabase, outputPath)
-      return NextResponse.json({ generationId: generation?.id, status: 'completed', stencilUrl })
-    }
-
-    // TEXT-TO-STENCIL: use Replicate flux-schnell, return 202 and poll
     const { data: generation, error: genError } = await adminSupabase
       .from('generations')
       .insert({
         user_id: user.id,
         quota_owner_id: quotaOwnerId,
-        type: 'text_to_stencil',
+        type: type as 'image_to_stencil' | 'text_to_stencil',
         status: 'pending',
         prompt: prompt ?? null,
-        metadata: { pipeline_step: 'step1' },
+        metadata: { pipeline_step: type === 'text_to_stencil' ? 'step1' : 'single' },
       })
       .select()
       .single()
@@ -102,14 +67,23 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: `DB error: ${genError?.message}` }, { status: 500 })
     }
 
-    const prediction = await createTextToImagePrediction(prompt!)
+    let prediction
+    if (type === 'image_to_stencil' && file) {
+      const imageBuffer = Buffer.from(await file.arrayBuffer())
+      prediction = await createImageToStencilPrediction(imageBuffer, file.type || 'image/jpeg')
+    } else {
+      prediction = await createTextToImagePrediction(prompt!)
+    }
 
     await adminSupabase
       .from('generations')
       .update({
         status: 'processing',
         replicate_id: prediction.id,
-        metadata: { pipeline_step: 'step1', replicate_id: prediction.id },
+        metadata: {
+          pipeline_step: type === 'text_to_stencil' ? 'step1' : 'single',
+          replicate_id: prediction.id,
+        },
       })
       .eq('id', generation.id)
 
