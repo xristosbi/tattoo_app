@@ -5,6 +5,8 @@ import { uploadInput, getInputSignedUrl } from '@/lib/storage'
 import { createImageToStencilPrediction } from '@/lib/replicate/image-to-stencil'
 import { createTextToImagePrediction } from '@/lib/replicate/text-to-stencil'
 
+export const maxDuration = 60
+
 const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
 
 export async function POST(request: Request) {
@@ -126,12 +128,13 @@ export async function POST(request: Request) {
       { status: 202 }
     )
   } catch (err) {
+    const message = err instanceof Error ? err.message : 'Replicate error'
+    console.error('[generate] Replicate error:', message)
     await adminSupabase
       .from('generations')
-      .update({ status: 'failed', error_message: 'Failed to start generation' })
+      .update({ status: 'failed', error_message: message })
       .eq('id', generation.id)
 
-    const message = err instanceof Error ? err.message : 'Replicate error'
     return NextResponse.json({ error: message }, { status: 500 })
   }
 }

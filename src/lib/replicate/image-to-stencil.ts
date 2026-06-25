@@ -3,7 +3,7 @@ import replicate from './client'
 // jagilley/controlnet-scribble — extracts clean line art / stencil from any image
 // Verify the latest version at: https://replicate.com/jagilley/controlnet-scribble
 const CONTROLNET_SCRIBBLE_VERSION =
-  '435061a1b5a4c1e26740464bf786efdfa9cb3a3ac488595a2de23e143fdb0117'
+  '435061a1b5a4c1e26740464bf786efdfa9cb3a3a473eca2fc5feab7e55ace225'
 
 export async function createImageToStencilPrediction(imageUrl: string) {
   return await replicate.predictions.create({

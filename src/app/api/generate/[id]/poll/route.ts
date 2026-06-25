@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
+
+export const maxDuration = 60
 import { uploadStencilFromUrl, getStencilSignedUrl } from '@/lib/storage'
 import { incrementQuota } from '@/lib/quota'
 import { createImageToStencilPrediction } from '@/lib/replicate/image-to-stencil'
@@ -54,15 +56,14 @@ export async function GET(
     const meta = generation.metadata as Record<string, unknown>
 
     if (prediction.status === 'failed' || prediction.error) {
+      const errorMsg = String(prediction.error ?? 'Replicate prediction failed')
+      console.error('[poll] Replicate prediction failed:', errorMsg, { generationId: generation.id })
       await adminSupabase
         .from('generations')
-        .update({
-          status: 'failed',
-          error_message: String(prediction.error ?? 'Replicate prediction failed'),
-        })
+        .update({ status: 'failed', error_message: errorMsg })
         .eq('id', generation.id)
 
-      return NextResponse.json({ status: 'failed', error: 'Generation failed' })
+      return NextResponse.json({ status: 'failed', error: errorMsg })
     }
 
     if (prediction.status !== 'succeeded') {
