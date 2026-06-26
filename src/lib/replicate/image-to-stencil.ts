@@ -1,7 +1,7 @@
 import sharp from 'sharp'
 import replicate from './client'
 
-// Step 1: flux-dev img2img — keeps structure of original, converts style to stencil
+// Step 1: flux-dev img2img — higher strength so model commits to linework style
 export async function createImageToStencilPrediction(imageBuffer: Buffer, mimeType: string) {
   const b64 = imageBuffer.toString('base64')
   const dataUri = `data:${mimeType};base64,${b64}`
@@ -11,10 +11,10 @@ export async function createImageToStencilPrediction(imageBuffer: Buffer, mimeTy
     input: {
       image: dataUri,
       prompt:
-        'tattoo stencil, bold black outlines only, pure white background, no shading, no color, no gray, no fill, clean line art, coloring book style, print ready',
-      prompt_strength: 0.6,
-      num_inference_steps: 28,
-      guidance_scale: 3.5,
+        'tattoo flash art stencil, bold black ink outlines only, pure white background, no shading, no gray tones, no color, no fill, clean crisp line art, coloring book style, print ready stencil',
+      prompt_strength: 0.78,
+      num_inference_steps: 30,
+      guidance_scale: 4.0,
       num_outputs: 1,
       output_format: 'png',
       output_quality: 95,
@@ -22,12 +22,28 @@ export async function createImageToStencilPrediction(imageBuffer: Buffer, mimeTy
   })
 }
 
-// Step 2: maximize contrast — pure black lines on pure white background
+// Step 2: edge-detection + line-fattening → pure black bold lines on white
 export async function applyStencilPostProcess(imageBuffer: Buffer): Promise<Buffer> {
-  return sharp(imageBuffer)
+  // Aggressively stretch contrast so midtones push toward black or white
+  const prepped = await sharp(imageBuffer)
     .greyscale()
     .normalise()
-    .threshold(180) // anything below 180 → black, above → white
+    .linear(2.5, -100)
+    .blur(0.4)
+    .toBuffer()
+
+  // Laplacian edge detection — finds outlines of every shape
+  const edgeBuf = await sharp(prepped)
+    .convolve({ width: 3, height: 3, kernel: [-1, -1, -1, -1, 8, -1, -1, -1, -1] })
+    .normalise()
+    .threshold(12) // catch even faint edges
+    .negate() // edges are black on white background
+    .toBuffer()
+
+  // Fatten lines: blur spreads the ink, threshold re-binarizes to pure B&W
+  return sharp(edgeBuf)
+    .blur(2.2)
+    .threshold(215)
     .png()
     .toBuffer()
 }
