@@ -1,7 +1,31 @@
 import sharp from 'sharp'
 import replicate from './client'
 
-// Used for text-to-stencil step2: convert flux-schnell output to linework
+// instruct-pix2pix: transforms photos based on a text instruction
+// Takes the actual uploaded image + instruction → returns stencil-style output
+const INSTRUCT_PIX2PIX_VERSION =
+  '30c1d0b916a6f8efce20493f5d61ee27491ab2a60437c13c588468b9810ec23f'
+
+export async function createImageToStencilPrediction(imageBuffer: Buffer, mimeType: string) {
+  const b64 = imageBuffer.toString('base64')
+  const dataUri = `data:${mimeType};base64,${b64}`
+
+  return await replicate.predictions.create({
+    version: INSTRUCT_PIX2PIX_VERSION,
+    input: {
+      image: dataUri,
+      prompt:
+        'convert to tattoo stencil, bold black outlines on pure white background, coloring book style, clean linework only, no shading, no color, no gray, high contrast black and white line art',
+      negative_prompt:
+        'color, shading, gray, gradients, watermark, blurry, low quality',
+      num_inference_steps: 80,
+      image_guidance_scale: 1.8,
+      guidance_scale: 9,
+    },
+  })
+}
+
+// Used for text-to-stencil step2: convert flux-schnell output to linework with sharp
 export async function imageBufferToStencil(imageBuffer: Buffer): Promise<Buffer> {
   const edgeBuf = await sharp(imageBuffer)
     .greyscale()
@@ -14,28 +38,4 @@ export async function imageBufferToStencil(imageBuffer: Buffer): Promise<Buffer>
     .negate()
     .toBuffer()
   return sharp(edgeBuf).blur(1.8).threshold(210).png().toBuffer()
-}
-
-const CONTROLNET_SCRIBBLE_VERSION =
-  '435061a1b5a4c1e26740464bf786efdfa9cb3a3ac488595a2de23e143fdb0117'
-
-export async function createImageToStencilPrediction(imageBuffer: Buffer, mimeType: string) {
-  const b64 = imageBuffer.toString('base64')
-  const dataUri = `data:${mimeType};base64,${b64}`
-
-  return await replicate.predictions.create({
-    version: CONTROLNET_SCRIBBLE_VERSION,
-    input: {
-      image: dataUri,
-      prompt:
-        'tattoo flash art, bold black outlines, white background, stencil ready, no shading, no color, clean lines',
-      negative_prompt:
-        'color, gray, shading, blurry, noise, watermark',
-      num_samples: '1',
-      image_resolution: '512',
-      detect_resolution: 512,
-      ddim_steps: 20,
-      scale: 9,
-    },
-  })
 }
