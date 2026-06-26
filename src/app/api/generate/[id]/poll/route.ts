@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { uploadStencilFromUrl, getStencilSignedUrl } from '@/lib/storage'
 import { incrementQuota } from '@/lib/quota'
-import { imageBufferToStencil } from '@/lib/replicate/image-to-stencil'
+import { imageBufferToStencil, applyStencilPostProcess } from '@/lib/replicate/image-to-stencil'
 import replicate from '@/lib/replicate/client'
 
 export const maxDuration = 60
@@ -94,7 +94,7 @@ export async function GET(
       return NextResponse.json({ status: 'completed', stencilUrl })
     }
 
-    // image-to-stencil: controlnet-scribble output is already the stencil
+    // image-to-stencil: flux-dev output → apply sharp post-process for pure B&W
     const output = prediction.output as string[] | string
     const outputUrl = Array.isArray(output) ? output[0] : output
 
@@ -106,7 +106,18 @@ export async function GET(
       return NextResponse.json({ status: 'failed', error: 'No stencil generated' })
     }
 
-    const outputPath = await uploadStencilFromUrl(adminSupabase, user.id, generation.id, outputUrl)
+    // Download flux-dev output and apply threshold to maximize contrast
+    const rawRes = await fetch(outputUrl)
+    if (!rawRes.ok) throw new Error('Failed to download stencil output')
+    const rawBuffer = Buffer.from(await rawRes.arrayBuffer())
+    const stencilBuffer = await applyStencilPostProcess(rawBuffer)
+
+    const outputPath = `${user.id}/${generation.id}.png`
+    const { error: uploadError } = await adminSupabase.storage
+      .from('stencils')
+      .upload(outputPath, stencilBuffer, { contentType: 'image/png', upsert: true })
+
+    if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`)
 
     await adminSupabase
       .from('generations')
