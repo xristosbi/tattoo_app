@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Zap, Wand2, Clock, Settings, Menu, X } from 'lucide-react'
+import { Wand2, Clock, Settings, Menu, X } from 'lucide-react'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { TierBadge } from '@/components/ui/Badge'
@@ -31,11 +31,13 @@ export default function DashboardNav({ user, profile, tier }: DashboardNavProps)
     <nav className="border-b border-ink-600 bg-ink-950/90 backdrop-blur-sm sticky top-0 z-40">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/generate" className="flex items-center gap-2 flex-shrink-0">
+        <Link href="/generate" className="flex items-center gap-2.5 flex-shrink-0">
           <div className="w-7 h-7 bg-forge-300 rounded-md flex items-center justify-center">
-            <Zap className="w-4 h-4 text-ink-950" />
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M7 1L8.6 5.1L13 5.8L10 8.7L10.7 13L7 11L3.3 13L4 8.7L1 5.8L5.4 5.1L7 1Z" fill="#F0EDE8"/>
+            </svg>
           </div>
-          <span className="font-bold text-lg text-ink-50">Inkforge</span>
+          <span className="font-playfair font-bold text-lg text-ink-50 tracking-wide">INKFORGE</span>
         </Link>
 
         {/* Desktop links */}

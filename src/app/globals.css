@@ -3,14 +3,15 @@
 @tailwind utilities;
 
 :root {
-  --bg-base: #0a0a0b;
-  --bg-card: #111113;
-  --bg-elevated: #1a1a1d;
-  --border: #2e2e32;
-  --text-primary: #e8e8ed;
-  --text-secondary: #9b9ba3;
-  --accent: #f59e0b;
-  --accent-hover: #fbbf24;
+  --bg-base:       #0D1F17;
+  --bg-card:       #122A1E;
+  --bg-elevated:   #193626;
+  --border:        #2B5240;
+  --text-primary:  #F0EDE8;
+  --text-secondary:#7A9B8A;
+  --accent:        #2D6A4F;
+  --accent-hover:  #3B8C68;
+  --gold:          #C9A84C;
 }
 
 * {
@@ -33,22 +34,22 @@ body {
 }
 
 ::selection {
-  background-color: rgba(245, 158, 11, 0.3);
-  color: #fde68a;
+  background-color: rgba(45, 106, 79, 0.35);
+  color: #D0E8DC;
 }
 
 ::-webkit-scrollbar {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #111113;
+  background: #122A1E;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2e2e32;
+  background: #2B5240;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3d3d42;
+  background: #3A6B55;
 }
 
 @layer utilities {
@@ -57,7 +58,7 @@ body {
   }
 
   .gradient-text {
-    @apply bg-gradient-to-r from-forge-300 to-forge-100 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-forge-200 to-forge-100 bg-clip-text text-transparent;
   }
 
   .card-surface {

@@ -40,9 +40,9 @@ export function tierLabel(tier: SubscriptionTier): string {
 
 export function tierColor(tier: SubscriptionTier): string {
   const colors: Record<SubscriptionTier, string> = {
-    free: 'text-ink-300 bg-ink-700 border-ink-600',
-    pro: 'text-forge-100 bg-forge-600/30 border-forge-500/50',
-    studio: 'text-forge-200 bg-forge-500/20 border-forge-400/50',
+    free: 'text-ink-300 bg-ink-800 border-ink-600',
+    pro: 'text-forge-100 bg-forge-100/10 border-forge-100/30',
+    studio: 'text-forge-100 bg-forge-100/15 border-forge-100/35',
   }
   return colors[tier]
 }
