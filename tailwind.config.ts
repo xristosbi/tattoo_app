@@ -10,7 +10,7 @@ const config: Config = {
     extend: {
       colors: {
         ink: {
-          950: '#0D1F17',
+          950: '#89F336',
           900: '#122A1E',
           800: '#193626',
           700: '#1E3D2D',
