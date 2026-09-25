@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback } from 'react'
 import { Upload, X, Image } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useLanguage } from '@/contexts/LanguageContext'
 import Button from '@/components/ui/Button'
 
 const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
@@ -19,15 +20,16 @@ export default function ImageUploadTab({ onGenerate, disabled }: ImageUploadTabP
   const [dragOver, setDragOver] = useState(false)
   const [fileError, setFileError] = useState<string | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const { t } = useLanguage()
 
   function validateAndSetFile(f: File) {
     setFileError(null)
     if (!ACCEPTED_TYPES.includes(f.type)) {
-      setFileError('Παρακαλώ ανέβασε εικόνα JPEG, PNG, WebP ή GIF.')
+      setFileError(t('upload_invalid_type'))
       return
     }
     if (f.size > MAX_SIZE_MB * 1024 * 1024) {
-      setFileError(`Το αρχείο είναι πολύ μεγάλο. Μέγιστο μέγεθος: ${MAX_SIZE_MB}MB.`)
+      setFileError(t('upload_too_large'))
       return
     }
     setFile(f)
@@ -78,12 +80,8 @@ export default function ImageUploadTab({ onGenerate, disabled }: ImageUploadTabP
             <Upload className="w-6 h-6 text-ink-400" />
           </div>
           <div>
-            <p className="text-sm text-ink-200 font-medium">
-              Σύρε το σχέδιό σου εδώ ή κάνε κλικ για ανέβασμα
-            </p>
-            <p className="text-xs text-ink-400 mt-1">
-              JPEG, PNG, WebP · Μέγιστο {MAX_SIZE_MB}MB
-            </p>
+            <p className="text-sm text-ink-200 font-medium">{t('upload_zone')}</p>
+            <p className="text-xs text-ink-400 mt-1">{t('upload_hint')}</p>
           </div>
           <input
             ref={inputRef}
@@ -100,7 +98,7 @@ export default function ImageUploadTab({ onGenerate, disabled }: ImageUploadTabP
         <div className="relative rounded-xl overflow-hidden border border-ink-600 bg-ink-900">
           <img
             src={preview}
-            alt="Προεπισκόπηση"
+            alt="Preview"
             className="w-full object-contain max-h-[300px]"
           />
           <button
@@ -128,7 +126,7 @@ export default function ImageUploadTab({ onGenerate, disabled }: ImageUploadTabP
         disabled={!file || disabled}
         loading={disabled}
       >
-        {disabled ? 'Δημιουργία…' : 'Δημιουργία Στένσιλ'}
+        {disabled ? t('generating') : t('generate_btn')}
       </Button>
     </form>
   )

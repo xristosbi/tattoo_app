@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Image, Type } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useGeneration } from '@/hooks/useGeneration'
+import { useLanguage } from '@/contexts/LanguageContext'
 import ImageUploadTab from './ImageUploadTab'
 import TextPromptTab from './TextPromptTab'
 import GenerationProgress from './GenerationProgress'
@@ -24,35 +25,34 @@ interface GeneratePageClientProps {
   }
 }
 
-const tabs: { id: Tab; label: string; labelMobile: string; icon: typeof Image }[] = [
-  { id: 'image', label: 'Εικόνα σε Στένσιλ', labelMobile: 'Εικόνα', icon: Image },
-  { id: 'text', label: 'Κείμενο σε Στένσιλ', labelMobile: 'Κείμενο', icon: Type },
-]
-
 export default function GeneratePageClient({ quotaInfo }: GeneratePageClientProps) {
   const [activeTab, setActiveTab] = useState<Tab>('image')
   const [showUpgrade, setShowUpgrade] = useState(false)
   const { state, stencilUrl, error, generateFromImage, generateFromText, reset } =
     useGeneration()
+  const { t } = useLanguage()
 
   const isActive = state === 'submitting' || state === 'processing'
   const isUnlimited = quotaInfo.limit === -1 || quotaInfo.limit >= 999999
+
+  const tabs: { id: Tab; label: string; labelMobile: string; icon: typeof Image }[] = [
+    { id: 'image', label: t('tab_image'), labelMobile: t('tab_image_short'), icon: Image },
+    { id: 'text', label: t('tab_text'), labelMobile: t('tab_text_short'), icon: Type },
+  ]
 
   return (
     <ToastProvider>
       <div className="max-w-4xl mx-auto">
         <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-ink-50">Δημιουργία Στένσιλ</h1>
-            <p className="text-ink-400 text-sm mt-1">
-              Ανέβασε φωτογραφία ή περίγραψε το σχέδιό σου
-            </p>
+            <h1 className="text-2xl font-bold text-ink-50">{t('gen_page_title')}</h1>
+            <p className="text-ink-400 text-sm mt-1">{t('gen_page_subtitle')}</p>
           </div>
           <div className="text-right min-w-[160px]">
             <p className="text-xs text-ink-400 mb-1.5">
               {isUnlimited
-                ? `${quotaInfo.used} δημιουργίες αυτόν τον μήνα`
-                : `${quotaInfo.used} / ${quotaInfo.limit} αυτόν τον μήνα`}
+                ? `${quotaInfo.used} ${t('usage_unlimited')}`
+                : `${quotaInfo.used} / ${quotaInfo.limit} ${t('usage_limited')}`}
             </p>
             <ProgressBar value={quotaInfo.used} max={isUnlimited ? 1 : quotaInfo.limit} />
           </div>
@@ -108,9 +108,7 @@ export default function GeneratePageClient({ quotaInfo }: GeneratePageClientProp
                 <div className="w-16 h-16 bg-ink-800 border border-ink-600 rounded-xl flex items-center justify-center mb-4">
                   <Image className="w-8 h-8 text-ink-600" />
                 </div>
-                <p className="text-ink-500 text-sm">
-                  Το στένσιλ σου θα εμφανιστεί εδώ
-                </p>
+                <p className="text-ink-500 text-sm">{t('idle_placeholder')}</p>
               </div>
             )}
 
@@ -124,11 +122,11 @@ export default function GeneratePageClient({ quotaInfo }: GeneratePageClientProp
 
             {state === 'error' && (
               <div className="h-full min-h-[300px] lg:min-h-[400px] bg-ink-900 border border-red-500/20 rounded-xl flex flex-col items-center justify-center text-center p-8">
-                <p className="text-red-400 font-medium mb-2">Αποτυχία δημιουργίας</p>
+                <p className="text-red-400 font-medium mb-2">{t('error_title')}</p>
                 <p className="text-ink-400 text-sm mb-6">
                   {error !== 'quota_exceeded'
-                    ? (error ?? 'Κάτι πήγε στραβά. Παρακαλώ δοκίμασε ξανά.')
-                    : 'Εξαντλήθηκαν οι δημιουργίες σου για αυτόν τον μήνα.'}
+                    ? (error ?? t('error_generic'))
+                    : t('error_quota')}
                 </p>
                 <button
                   onClick={() => {
@@ -140,7 +138,7 @@ export default function GeneratePageClient({ quotaInfo }: GeneratePageClientProp
                   }}
                   className="text-sm text-forge-300 hover:text-forge-200"
                 >
-                  {error === 'quota_exceeded' ? 'Αναβάθμιση πλάνου' : 'Δοκίμασε ξανά'}
+                  {error === 'quota_exceeded' ? t('upgrade_plan') : t('try_again')}
                 </button>
               </div>
             )}

@@ -7,6 +7,8 @@ import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { TierBadge } from '@/components/ui/Badge'
 import UserMenu from './UserMenu'
+import LanguageToggle from './LanguageToggle'
+import { useLanguage } from '@/contexts/LanguageContext'
 import type { SubscriptionTier } from '@/types'
 import type { User } from '@supabase/supabase-js'
 import type { Profile } from '@/types'
@@ -17,15 +19,16 @@ interface DashboardNavProps {
   tier: SubscriptionTier
 }
 
-const navLinks = [
-  { href: '/generate', label: 'Δημιουργία', icon: Wand2 },
-  { href: '/history', label: 'Ιστορικό', icon: Clock },
-  { href: '/settings', label: 'Ρυθμίσεις', icon: Settings },
-]
-
 export default function DashboardNav({ user, profile, tier }: DashboardNavProps) {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const { t } = useLanguage()
+
+  const navLinks = [
+    { href: '/generate', label: t('nav_generate'), icon: Wand2 },
+    { href: '/history', label: t('nav_history'), icon: Clock },
+    { href: '/settings', label: t('nav_settings'), icon: Settings },
+  ]
 
   return (
     <nav className="border-b border-ink-600 bg-ink-950/90 backdrop-blur-sm sticky top-0 z-40">
@@ -62,6 +65,7 @@ export default function DashboardNav({ user, profile, tier }: DashboardNavProps)
 
         {/* Right side */}
         <div className="flex items-center gap-3">
+          <LanguageToggle />
           <div className="hidden md:block">
             <UserMenu user={user} profile={profile} tier={tier} />
           </div>

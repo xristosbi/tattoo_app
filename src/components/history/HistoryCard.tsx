@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Download, Image, Type } from 'lucide-react'
 import { formatRelativeDate, truncate } from '@/lib/utils'
+import { useLanguage } from '@/contexts/LanguageContext'
 import type { GenerationWithUrl } from '@/types'
 
 interface HistoryCardProps {
@@ -11,6 +12,7 @@ interface HistoryCardProps {
 
 export default function HistoryCard({ generation }: HistoryCardProps) {
   const [downloading, setDownloading] = useState(false)
+  const { t } = useLanguage()
 
   async function handleDownload(e: React.MouseEvent) {
     e.stopPropagation()
@@ -68,7 +70,7 @@ export default function HistoryCard({ generation }: HistoryCardProps) {
         <div className="flex items-center gap-1.5 mb-1">
           <div className="w-1.5 h-1.5 rounded-full bg-ink-500" />
           <span className="text-xs text-ink-500 uppercase tracking-wider font-medium">
-            {isImage ? 'Εικόνα' : 'Κείμενο'}
+            {isImage ? t('type_image') : t('type_text')}
           </span>
         </div>
         {generation.prompt && (

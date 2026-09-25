@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Playfair_Display, DM_Sans, DM_Mono } from 'next/font/google'
+import { LanguageProvider } from '@/contexts/LanguageContext'
 import './globals.css'
 
 const playfair = Playfair_Display({
@@ -38,7 +39,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${playfair.variable} ${dmSans.variable} ${dmMono.variable}`}>
-      <body className="bg-ink-950 text-ink-50 antialiased">{children}</body>
+      <body className="bg-ink-950 text-ink-50 antialiased">
+        <LanguageProvider>{children}</LanguageProvider>
+      </body>
     </html>
   )
 }

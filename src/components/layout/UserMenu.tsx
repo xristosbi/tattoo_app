@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { LogOut, CreditCard, ChevronDown } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { getInitials } from '@/lib/utils'
+import { useLanguage } from '@/contexts/LanguageContext'
 import type { User } from '@supabase/supabase-js'
 import type { Profile, SubscriptionTier } from '@/types'
 
@@ -21,6 +22,7 @@ export default function UserMenu({ user, profile, mobile }: UserMenuProps) {
   const [open, setOpen] = useState(false)
   const [portalLoading, setPortalLoading] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
+  const { t } = useLanguage()
 
   const initials = getInitials(profile?.full_name, user.email ?? '')
   const displayName = profile?.full_name || user.email || ''
@@ -64,14 +66,14 @@ export default function UserMenu({ user, profile, mobile }: UserMenuProps) {
           className="flex items-center gap-2 w-full px-3 py-2 text-sm text-ink-300 hover:text-ink-100 hover:bg-ink-800 rounded-lg transition-colors"
         >
           <CreditCard className="w-4 h-4" />
-          Billing portal
+          {t('billing_portal')}
         </button>
         <button
           onClick={handleSignOut}
           className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 rounded-lg transition-colors"
         >
           <LogOut className="w-4 h-4" />
-          Sign out
+          {t('sign_out')}
         </button>
       </div>
     )
@@ -101,7 +103,7 @@ export default function UserMenu({ user, profile, mobile }: UserMenuProps) {
             className="flex items-center gap-2 w-full px-3 py-2 text-sm text-ink-300 hover:text-ink-100 hover:bg-ink-700 transition-colors"
           >
             <CreditCard className="w-4 h-4" />
-            Billing portal
+            {t('billing_portal')}
           </button>
           <div className="border-t border-ink-600 my-1" />
           <button
@@ -109,7 +111,7 @@ export default function UserMenu({ user, profile, mobile }: UserMenuProps) {
             className="flex items-center gap-2 w-full px-3 py-2 text-sm text-red-400 hover:bg-red-500/10 transition-colors"
           >
             <LogOut className="w-4 h-4" />
-            Sign out
+            {t('sign_out')}
           </button>
         </div>
       )}

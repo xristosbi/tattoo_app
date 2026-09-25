@@ -4,13 +4,7 @@ import { useState } from 'react'
 import { Wand2 } from 'lucide-react'
 import Textarea from '@/components/ui/Textarea'
 import Button from '@/components/ui/Button'
-
-const EXAMPLES = [
-  'Παραδοσιακό ιαπωνικό κοϊ ψάρι με λωτούς, τολμηρές γραμμές',
-  'Γεωμετρικό κρανίο λύκου με μαντάλα',
-  'Κλασική άγκυρα με τριαντάφυλλα, ναυτικό στυλ',
-  'Μινιμαλιστική οροσειρά με έλατα',
-]
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface TextPromptTabProps {
   onGenerate: (prompt: string) => Promise<void>
@@ -19,6 +13,14 @@ interface TextPromptTabProps {
 
 export default function TextPromptTab({ onGenerate, disabled }: TextPromptTabProps) {
   const [prompt, setPrompt] = useState('')
+  const { t } = useLanguage()
+
+  const examples = [
+    t('example_1'),
+    t('example_2'),
+    t('example_3'),
+    t('example_4'),
+  ]
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -29,10 +31,10 @@ export default function TextPromptTab({ onGenerate, disabled }: TextPromptTabPro
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <Textarea
-        label="Περίγραψε την ιδέα σου για τατουάζ"
+        label={t('prompt_label')}
         value={prompt}
         onChange={(e) => setPrompt(e.target.value)}
-        placeholder="π.χ. Παραδοσιακό ιαπωνικό κοϊ ψάρι με λωτούς, τολμηρές γραμμές..."
+        placeholder={t('prompt_placeholder')}
         rows={4}
         maxLength={500}
         disabled={disabled}
@@ -40,10 +42,10 @@ export default function TextPromptTab({ onGenerate, disabled }: TextPromptTabPro
 
       <div>
         <p className="text-xs text-ink-500 mb-2 uppercase tracking-wider font-medium">
-          Δοκίμασε ένα παράδειγμα
+          {t('try_example')}
         </p>
         <div className="flex flex-wrap gap-2">
-          {EXAMPLES.map((ex) => (
+          {examples.map((ex) => (
             <button
               key={ex}
               type="button"
@@ -69,7 +71,7 @@ export default function TextPromptTab({ onGenerate, disabled }: TextPromptTabPro
         loading={disabled}
       >
         <Wand2 className="w-4 h-4" />
-        {disabled ? 'Δημιουργία…' : 'Δημιουργία Στένσιλ'}
+        {disabled ? t('generating') : t('generate_btn')}
       </Button>
     </form>
   )

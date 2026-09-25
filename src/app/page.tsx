@@ -1,85 +1,56 @@
+'use client'
+
 import Link from 'next/link'
 import { Download, Users, Shield, Sparkles } from 'lucide-react'
-
-const features = [
-  {
-    icon: Sparkles,
-    title: 'Image to Stencil',
-    description:
-      'Upload any photo or drawing and get a clean, print-ready stencil in seconds. Perfect for custom tattoo designs.',
-  },
-  {
-    icon: Download,
-    title: 'Text to Stencil',
-    description:
-      'Describe your tattoo concept in words. Our AI generates the image and converts it into a professional stencil.',
-  },
-  {
-    icon: Users,
-    title: 'Team Collaboration',
-    description:
-      'Studio tier lets you add up to 3 team members so your whole crew can generate stencils together.',
-  },
-  {
-    icon: Shield,
-    title: 'Private & Secure',
-    description:
-      'Your designs are stored securely and are only accessible to you. We never share your work.',
-  },
-]
-
-const pricing = [
-  {
-    name: 'Starter',
-    price: '€12',
-    period: 'per month',
-    gens: '20 stencil generations',
-    features: [
-      'Image to stencil',
-      'Text to stencil',
-      'PNG download (2048 px)',
-      '30-day history',
-    ],
-    cta: 'Get Starter',
-    href: '/signup',
-    highlighted: false,
-    gold: false,
-  },
-  {
-    name: 'Plus',
-    price: '€29',
-    period: 'per month',
-    gens: '60 stencil generations',
-    features: [
-      'Everything in Starter',
-      'Priority generation queue',
-      'Unlimited history',
-      'Prompt fine-tuning',
-    ],
-    cta: 'Get Plus',
-    href: '/signup?plan=pro',
-    highlighted: true,
-    gold: false,
-  },
-  {
-    name: 'Professional',
-    price: '€59',
-    period: 'per month',
-    gens: 'Unlimited generations',
-    features: [
-      'Everything in Plus',
-      'Up to 3 team members',
-      'Shared studio library',
-      'Dedicated support',
-    ],
-    cta: 'Get Professional',
-    href: '/signup?plan=studio',
-    highlighted: false,
-    gold: true,
-  },
-]
+import { useLanguage } from '@/contexts/LanguageContext'
+import LanguageToggle from '@/components/layout/LanguageToggle'
 
 export default function LandingPage() {
+  const { t } = useLanguage()
+
+  const features = [
+    { icon: Sparkles, title: t('feature_img_title'), description: t('feature_img_desc') },
+    { icon: Download, title: t('feature_txt_title'), description: t('feature_txt_desc') },
+    { icon: Users, title: t('feature_team_title'), description: t('feature_team_desc') },
+    { icon: Shield, title: t('feature_secure_title'), description: t('feature_secure_desc') },
+  ]
+
+  const pricing = [
+    {
+      name: 'Starter',
+      price: '€12',
+      period: t('per_month'),
+      gens: t('starter_gens'),
+      features: [t('starter_f1'), t('starter_f2'), t('starter_f3'), t('starter_f4')],
+      cta: t('cta_starter'),
+      href: '/signup',
+      highlighted: false,
+      gold: false,
+    },
+    {
+      name: 'Plus',
+      price: '€29',
+      period: t('per_month'),
+      gens: t('plus_gens'),
+      features: [t('plus_f1'), t('plus_f2'), t('plus_f3'), t('plus_f4')],
+      cta: t('cta_plus'),
+      href: '/signup?plan=pro',
+      highlighted: true,
+      gold: false,
+    },
+    {
+      name: 'Professional',
+      price: '€59',
+      period: t('per_month'),
+      gens: t('professional_gens'),
+      features: [t('professional_f1'), t('professional_f2'), t('professional_f3'), t('professional_f4')],
+      cta: t('cta_professional'),
+      href: '/signup?plan=studio',
+      highlighted: false,
+      gold: true,
+    },
+  ]
+
   return (
     <div className="min-h-screen bg-ink-950">
       {/* Nav */}
@@ -94,21 +65,22 @@ export default function LandingPage() {
             <span className="font-playfair font-bold text-lg text-ink-50 tracking-wide">INKFORGE</span>
           </div>
           <div className="hidden md:flex items-center gap-6">
-            <a href="#features" className="text-sm text-ink-300 hover:text-ink-50 transition-colors">Features</a>
-            <a href="#pricing" className="text-sm text-ink-300 hover:text-ink-50 transition-colors">Pricing</a>
+            <a href="#features" className="text-sm text-ink-300 hover:text-ink-50 transition-colors">{t('nav_features')}</a>
+            <a href="#pricing" className="text-sm text-ink-300 hover:text-ink-50 transition-colors">{t('nav_pricing')}</a>
           </div>
           <div className="flex items-center gap-2.5">
+            <LanguageToggle />
             <Link
               href="/login"
               className="text-sm text-ink-300 hover:text-ink-100 transition-colors px-3 py-1.5"
             >
-              Sign in
+              {t('nav_sign_in')}
             </Link>
             <Link
               href="/signup"
               className="text-sm font-semibold bg-forge-300 hover:bg-forge-200 text-ink-50 px-4 py-2 rounded-lg transition-colors"
             >
-              Start free
+              {t('nav_start_free')}
             </Link>
           </div>
         </div>
@@ -117,33 +89,31 @@ export default function LandingPage() {
       {/* Hero */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 pt-20 pb-16 text-center">
         <div className="inline-flex items-center gap-2 bg-forge-300/10 border border-forge-300/25 text-forge-200 text-xs font-mono tracking-widest uppercase px-3 py-1 rounded-full mb-8">
-          AI-Powered Stencil Generation
+          {t('hero_badge')}
         </div>
         <h1 className="font-playfair text-4xl sm:text-5xl md:text-[62px] font-black text-ink-50 leading-[1.06] text-balance mb-6">
-          Your design.{' '}
-          <em className="text-forge-100 not-italic">Stencil-ready</em>{' '}
-          in seconds.
+          {t('hero_h1_1')}{' '}
+          <em className="text-forge-100 not-italic">{t('hero_h1_italic')}</em>{' '}
+          {t('hero_h1_2')}
         </h1>
         <p className="text-base sm:text-lg text-ink-300 max-w-lg mx-auto mb-10 leading-relaxed">
-          The AI stencil generator built for professional tattoo artists.
-          Upload any design — photograph, sketch, or digital art — and get a
-          clean, print-ready stencil.
+          {t('hero_subtitle')}
         </p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
             href="/signup"
             className="inline-flex items-center justify-center gap-2 bg-forge-300 hover:bg-forge-200 text-ink-50 font-semibold px-8 py-3.5 rounded-xl text-base transition-colors"
           >
-            Start free — no card needed
+            {t('hero_cta_primary')}
           </Link>
           <Link
             href="/login"
             className="inline-flex items-center justify-center gap-2 border border-ink-600 hover:border-ink-500 text-ink-200 hover:text-ink-50 px-8 py-3.5 rounded-xl text-base transition-colors"
           >
-            Sign in
+            {t('hero_cta_secondary')}
           </Link>
         </div>
-        <p className="text-xs text-ink-400 mt-4 font-mono tracking-wide">5 free generations · no credit card required</p>
+        <p className="text-xs text-ink-400 mt-4 font-mono tracking-wide">{t('hero_note')}</p>
       </section>
 
       {/* Before / After proof */}
@@ -152,7 +122,7 @@ export default function LandingPage() {
           {/* Original */}
           <div className="rounded-2xl border border-ink-600 overflow-hidden">
             <div className="bg-ink-900 border-b border-ink-600 px-4 py-2.5">
-              <span className="font-mono text-[10px] tracking-widest uppercase text-ink-400">Original design</span>
+              <span className="font-mono text-[10px] tracking-widest uppercase text-ink-400">{t('before_label')}</span>
             </div>
             <div className="bg-ink-800 aspect-[4/3] flex items-center justify-center p-6">
               <svg viewBox="0 0 200 150" width="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -182,7 +152,7 @@ export default function LandingPage() {
           {/* Stencil output */}
           <div className="rounded-2xl border border-forge-300/30 overflow-hidden">
             <div className="bg-ink-900 border-b border-forge-300/20 px-4 py-2.5 flex items-center justify-between">
-              <span className="font-mono text-[10px] tracking-widest uppercase text-forge-200">Inkforge output</span>
+              <span className="font-mono text-[10px] tracking-widest uppercase text-forge-200">{t('after_label')}</span>
               <span className="w-1.5 h-1.5 rounded-full bg-forge-200 shadow-[0_0_6px_#3B8C68]"></span>
             </div>
             <div className="bg-[#FAFAF8] aspect-[4/3] flex items-center justify-center p-6">
@@ -203,9 +173,9 @@ export default function LandingPage() {
       {/* Features */}
       <section id="features" className="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
         <h2 className="font-playfair text-3xl font-bold text-center text-ink-50 mb-3 text-balance">
-          Built for working artists
+          {t('features_title')}
         </h2>
-        <p className="text-center text-ink-300 text-sm mb-12">Everything you need, nothing you don't.</p>
+        <p className="text-center text-ink-300 text-sm mb-12">{t('features_subtitle')}</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           {features.map((f) => (
             <div key={f.title} className="bg-ink-900 border border-ink-600 rounded-xl p-6 hover:border-ink-500 transition-colors">
@@ -223,11 +193,9 @@ export default function LandingPage() {
       <section id="pricing" className="bg-ink-900/50 border-y border-ink-600 py-20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <h2 className="font-playfair text-3xl font-bold text-center text-ink-50 mb-3 text-balance">
-            Simple, honest pricing
+            {t('pricing_title')}
           </h2>
-          <p className="text-center text-ink-300 text-sm mb-12">
-            One monthly generation allowance. No surprises. Cancel anytime.
-          </p>
+          <p className="text-center text-ink-300 text-sm mb-12">{t('pricing_subtitle')}</p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {pricing.map((tier) => (
               <div
@@ -242,7 +210,7 @@ export default function LandingPage() {
               >
                 {tier.highlighted && (
                   <div className="absolute -top-px left-1/2 -translate-x-1/2 bg-forge-300 text-ink-50 text-[10px] font-mono font-medium tracking-widest uppercase px-3 py-1 rounded-b-lg">
-                    Most Popular
+                    {t('most_popular')}
                   </div>
                 )}
                 <div className="font-mono text-[10px] tracking-widest uppercase text-ink-400 mb-3">{tier.name}</div>
@@ -292,7 +260,7 @@ export default function LandingPage() {
             <span className="font-playfair font-bold text-ink-50 tracking-wide">INKFORGE</span>
           </div>
           <p className="text-sm text-ink-400">
-            © {new Date().getFullYear()} Inkforge. Built for tattoo artists.
+            © {new Date().getFullYear()} Inkforge. {t('footer_copy')}
           </p>
         </div>
       </footer>

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface LoginFormProps {
   redirectTo: string
@@ -17,6 +18,7 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const { t } = useLanguage()
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -38,7 +40,7 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <Input
-        label="Email"
+        label={t('email_label')}
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
@@ -47,7 +49,7 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
         autoComplete="email"
       />
       <Input
-        label="Κωδικός"
+        label={t('password_label')}
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
@@ -61,7 +63,7 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
         </p>
       )}
       <Button type="submit" loading={loading} className="w-full" size="lg">
-        Σύνδεση
+        {t('login_btn')}
       </Button>
     </form>
   )

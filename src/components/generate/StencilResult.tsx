@@ -2,6 +2,7 @@
 
 import { Download, RotateCcw, CheckCircle } from 'lucide-react'
 import Button from '@/components/ui/Button'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface StencilResultProps {
   stencilUrl: string
@@ -9,6 +10,8 @@ interface StencilResultProps {
 }
 
 export default function StencilResult({ stencilUrl, onReset }: StencilResultProps) {
+  const { t } = useLanguage()
+
   async function handleDownload() {
     const res = await fetch(stencilUrl)
     const blob = await res.blob()
@@ -25,14 +28,14 @@ export default function StencilResult({ stencilUrl, onReset }: StencilResultProp
       {/* Success banner */}
       <div className="flex items-center gap-2 px-4 py-3 bg-green-500/10 border-b border-green-500/20">
         <CheckCircle className="w-4 h-4 text-green-400 flex-shrink-0" />
-        <span className="text-sm text-green-400 font-medium">Το στένσιλ είναι έτοιμο!</span>
+        <span className="text-sm text-green-400 font-medium">{t('result_ready')}</span>
       </div>
 
       {/* Preview */}
       <div className="bg-white">
         <img
           src={stencilUrl}
-          alt="Στένσιλ τατουάζ"
+          alt="Stencil"
           className="w-full object-contain max-h-[400px]"
         />
       </div>
@@ -41,11 +44,11 @@ export default function StencilResult({ stencilUrl, onReset }: StencilResultProp
       <div className="p-4 flex gap-3">
         <Button onClick={handleDownload} className="flex-1" size="lg">
           <Download className="w-4 h-4" />
-          Λήψη PNG
+          {t('download_png')}
         </Button>
         <Button onClick={onReset} variant="secondary" size="lg">
           <RotateCcw className="w-4 h-4" />
-          Νέο
+          {t('new_stencil')}
         </Button>
       </div>
     </div>

@@ -2,29 +2,31 @@
 
 import { useEffect, useState } from 'react'
 import Spinner from '@/components/ui/Spinner'
-
-const IMAGE_STEPS = [
-  'Ανέβασμα εικόνας…',
-  'Ανίχνευση γραμμών και περιγραμμάτων…',
-  'Εξαγωγή σχεδίου…',
-  'Καθαρισμός στένσιλ…',
-  'Οριστικοποίηση…',
-]
-
-const TEXT_STEPS = [
-  'Ανάλυση ιδέας…',
-  'Δημιουργία εικόνας…',
-  'Εξαγωγή σχεδίου…',
-  'Μετατροπή σε στένσιλ…',
-  'Οριστικοποίηση…',
-]
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface GenerationProgressProps {
   type: 'image' | 'text'
 }
 
 export default function GenerationProgress({ type }: GenerationProgressProps) {
-  const steps = type === 'image' ? IMAGE_STEPS : TEXT_STEPS
+  const { t } = useLanguage()
+
+  const imageSteps = [
+    t('progress_img_1'),
+    t('progress_img_2'),
+    t('progress_img_3'),
+    t('progress_img_4'),
+    t('progress_img_5'),
+  ]
+  const textSteps = [
+    t('progress_txt_1'),
+    t('progress_txt_2'),
+    t('progress_txt_3'),
+    t('progress_txt_4'),
+    t('progress_txt_5'),
+  ]
+
+  const steps = type === 'image' ? imageSteps : textSteps
   const [stepIndex, setStepIndex] = useState(0)
 
   useEffect(() => {
@@ -45,7 +47,7 @@ export default function GenerationProgress({ type }: GenerationProgressProps) {
       </div>
 
       <p className="text-ink-200 font-medium mb-2">{steps[stepIndex]}</p>
-      <p className="text-ink-500 text-xs">Συνήθως διαρκεί 20–60 δευτερόλεπτα</p>
+      <p className="text-ink-500 text-xs">{t('progress_eta')}</p>
 
       <div className="flex gap-1.5 mt-6">
         {steps.map((_, i) => (

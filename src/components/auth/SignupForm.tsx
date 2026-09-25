@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import Input from '@/components/ui/Input'
 import Button from '@/components/ui/Button'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface SignupFormProps {
   defaultPlan?: string
@@ -18,6 +19,7 @@ export default function SignupForm({ defaultPlan }: SignupFormProps) {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const { t } = useLanguage()
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -25,7 +27,7 @@ export default function SignupForm({ defaultPlan }: SignupFormProps) {
     setError(null)
 
     if (password.length < 8) {
-      setError('Ο κωδικός πρέπει να έχει τουλάχιστον 8 χαρακτήρες')
+      setError(t('password_error'))
       setLoading(false)
       return
     }
@@ -55,15 +57,15 @@ export default function SignupForm({ defaultPlan }: SignupFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <Input
-        label="Ονοματεπώνυμο"
+        label={t('name_label')}
         type="text"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        placeholder="Γιάννης Παπαδόπουλος"
+        placeholder={t('name_placeholder')}
         autoComplete="name"
       />
       <Input
-        label="Email"
+        label={t('email_label')}
         type="email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
@@ -72,11 +74,11 @@ export default function SignupForm({ defaultPlan }: SignupFormProps) {
         autoComplete="email"
       />
       <Input
-        label="Κωδικός"
+        label={t('password_label')}
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        placeholder="Τουλάχιστον 8 χαρακτήρες"
+        placeholder={t('password_placeholder')}
         required
         autoComplete="new-password"
       />
@@ -86,11 +88,9 @@ export default function SignupForm({ defaultPlan }: SignupFormProps) {
         </p>
       )}
       <Button type="submit" loading={loading} className="w-full" size="lg">
-        Δημιουργία Λογαριασμού
+        {t('signup_btn')}
       </Button>
-      <p className="text-xs text-center text-ink-500">
-        Με την εγγραφή σου, αποδέχεσαι τους όρους χρήσης και την πολιτική απορρήτου.
-      </p>
+      <p className="text-xs text-center text-ink-500">{t('terms_text')}</p>
     </form>
   )
 }

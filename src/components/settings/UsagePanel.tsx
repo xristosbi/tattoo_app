@@ -1,7 +1,10 @@
+'use client'
+
 import { BarChart3 } from 'lucide-react'
 import Card, { CardHeader, CardBody } from '@/components/ui/Card'
 import ProgressBar from '@/components/ui/ProgressBar'
 import { formatDate } from '@/lib/utils'
+import { useLanguage } from '@/contexts/LanguageContext'
 
 interface UsagePanelProps {
   quotaInfo: {
@@ -13,6 +16,7 @@ interface UsagePanelProps {
 }
 
 export default function UsagePanel({ quotaInfo }: UsagePanelProps) {
+  const { t } = useLanguage()
   const isUnlimited = quotaInfo.limit === -1 || quotaInfo.limit >= 999999
   const percent = isUnlimited
     ? 0
@@ -23,7 +27,7 @@ export default function UsagePanel({ quotaInfo }: UsagePanelProps) {
       <CardHeader>
         <div className="flex items-center gap-2">
           <BarChart3 className="w-4 h-4 text-ink-400" />
-          <h2 className="font-semibold text-ink-100">Χρήση αυτόν τον μήνα</h2>
+          <h2 className="font-semibold text-ink-100">{t('usage_title')}</h2>
         </div>
       </CardHeader>
       <CardBody className="space-y-4">
@@ -33,7 +37,7 @@ export default function UsagePanel({ quotaInfo }: UsagePanelProps) {
             {!isUnlimited && (
               <span className="text-ink-400 text-sm ml-2">/ {quotaInfo.limit}</span>
             )}
-            <p className="text-xs text-ink-500 mt-0.5">στένσιλ δημιουργήθηκαν</p>
+            <p className="text-xs text-ink-500 mt-0.5">{t('stencils_generated')}</p>
           </div>
           {!isUnlimited && (
             <span
@@ -41,7 +45,7 @@ export default function UsagePanel({ quotaInfo }: UsagePanelProps) {
                 percent >= 80 ? 'text-red-400' : 'text-ink-400'
               }`}
             >
-              {percent}% χρησιμοποιήθηκε
+              {percent}% {t('percent_used')}
             </span>
           )}
         </div>
@@ -49,10 +53,10 @@ export default function UsagePanel({ quotaInfo }: UsagePanelProps) {
         <ProgressBar value={quotaInfo.used} max={isUnlimited ? 1 : quotaInfo.limit} showLabel />
 
         {isUnlimited ? (
-          <p className="text-xs text-ink-500">Απεριόριστες δημιουργίες στο Professional πλάνο</p>
+          <p className="text-xs text-ink-500">{t('unlimited_plan_desc')}</p>
         ) : (
           <p className="text-xs text-ink-500">
-            Επαναφέρεται στις {formatDate(quotaInfo.periodEnd)}
+            {t('resets_on')} {formatDate(quotaInfo.periodEnd)}
           </p>
         )}
       </CardBody>

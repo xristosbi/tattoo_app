@@ -1,8 +1,6 @@
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { getQuotaInfo } from '@/lib/quota'
-import SubscriptionPanel from '@/components/settings/SubscriptionPanel'
-import UsagePanel from '@/components/settings/UsagePanel'
-import TeamPanel from '@/components/settings/TeamPanel'
+import SettingsPageClient from '@/components/settings/SettingsPageClient'
 import type { TeamMemberWithProfile } from '@/types'
 
 export const metadata = { title: 'Settings — Inkforge' }
@@ -17,14 +15,15 @@ export default async function SettingsPage() {
 
   const adminSupabase = createAdminClient()
 
-  const [{ data: profile }, { data: subscription }, quotaInfo] = await Promise.all([
-    supabase.from('profiles').select('*').eq('id', user.id).single(),
+  const [{ data: subscription }, quotaInfo] = await Promise.all([
     supabase.from('subscriptions').select('*').eq('user_id', user.id).single(),
     getQuotaInfo(supabase, user.id),
   ])
 
   let teamMembers: TeamMemberWithProfile[] = []
-  if (subscription?.tier === 'studio' || subscription?.tier === 'professional') {
+  const showTeam = subscription?.tier === 'studio' || subscription?.tier === 'professional'
+
+  if (showTeam) {
     const { data } = await adminSupabase
       .from('team_members')
       .select('*, profile:profiles!member_id(full_name, avatar_url)')
@@ -35,17 +34,12 @@ export default async function SettingsPage() {
   }
 
   return (
-    <div className="max-w-2xl space-y-6">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-ink-50">Ρυθμίσεις</h1>
-        <p className="text-ink-400 text-sm mt-1">Διαχείριση λογαριασμού και συνδρομής</p>
-      </div>
-
-      <SubscriptionPanel subscription={subscription} userEmail={user.email ?? ''} />
-      <UsagePanel quotaInfo={quotaInfo} />
-      {(subscription?.tier === 'studio' || subscription?.tier === 'professional') && (
-        <TeamPanel teamMembers={teamMembers} />
-      )}
-    </div>
+    <SettingsPageClient
+      subscription={subscription}
+      userEmail={user.email ?? ''}
+      quotaInfo={quotaInfo}
+      teamMembers={teamMembers}
+      showTeam={showTeam}
+    />
   )
 }

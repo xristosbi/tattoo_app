@@ -2,6 +2,7 @@
 
 import { Clock } from 'lucide-react'
 import HistoryCard from './HistoryCard'
+import { useLanguage } from '@/contexts/LanguageContext'
 import type { GenerationWithUrl } from '@/types'
 
 interface HistoryGridProps {
@@ -9,16 +10,16 @@ interface HistoryGridProps {
 }
 
 export default function HistoryGrid({ generations }: HistoryGridProps) {
+  const { t } = useLanguage()
+
   if (generations.length === 0) {
     return (
       <div className="text-center py-24 border border-dashed border-ink-600 rounded-xl">
         <div className="w-12 h-12 bg-ink-800 rounded-xl flex items-center justify-center mx-auto mb-4">
           <Clock className="w-6 h-6 text-ink-600" />
         </div>
-        <p className="text-ink-400 font-medium">Δεν υπάρχουν στένσιλ ακόμα</p>
-        <p className="text-ink-600 text-sm mt-1">
-          Τα στένσιλ που δημιουργείς θα εμφανίζονται εδώ
-        </p>
+        <p className="text-ink-400 font-medium">{t('history_empty_title')}</p>
+        <p className="text-ink-600 text-sm mt-1">{t('history_empty_sub')}</p>
       </div>
     )
   }
