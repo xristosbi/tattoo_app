@@ -1,4 +1,4 @@
-export type SubscriptionTier = 'free' | 'pro' | 'studio'
+export type SubscriptionTier = 'free' | 'starter' | 'plus' | 'professional' | 'pro' | 'studio'
 export type SubscriptionStatus =
   | 'active'
   | 'canceled'
@@ -17,6 +17,10 @@ export interface Profile {
   email: string
   full_name: string | null
   avatar_url: string | null
+  subscription_tier: SubscriptionTier
+  generations_used: number
+  generations_limit: number
+  generations_reset_at: string
   created_at: string
   updated_at: string
 }

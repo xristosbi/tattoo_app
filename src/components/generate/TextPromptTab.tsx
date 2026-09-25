@@ -6,10 +6,10 @@ import Textarea from '@/components/ui/Textarea'
 import Button from '@/components/ui/Button'
 
 const EXAMPLES = [
-  'Traditional Japanese koi fish with lotus flowers, bold outlines',
-  'Geometric wolf skull with mandala patterns',
-  'Classic anchor with rope and roses, sailor style',
-  'Minimalist mountain range with pine trees',
+  'Παραδοσιακό ιαπωνικό κοϊ ψάρι με λωτούς, τολμηρές γραμμές',
+  'Γεωμετρικό κρανίο λύκου με μαντάλα',
+  'Κλασική άγκυρα με τριαντάφυλλα, ναυτικό στυλ',
+  'Μινιμαλιστική οροσειρά με έλατα',
 ]
 
 interface TextPromptTabProps {
@@ -29,10 +29,10 @@ export default function TextPromptTab({ onGenerate, disabled }: TextPromptTabPro
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <Textarea
-        label="Describe your tattoo concept"
+        label="Περίγραψε την ιδέα σου για τατουάζ"
         value={prompt}
         onChange={(e) => setPrompt(e.target.value)}
-        placeholder="e.g. Traditional Japanese koi fish with lotus flowers, bold outlines..."
+        placeholder="π.χ. Παραδοσιακό ιαπωνικό κοϊ ψάρι με λωτούς, τολμηρές γραμμές..."
         rows={4}
         maxLength={500}
         disabled={disabled}
@@ -40,7 +40,7 @@ export default function TextPromptTab({ onGenerate, disabled }: TextPromptTabPro
 
       <div>
         <p className="text-xs text-ink-500 mb-2 uppercase tracking-wider font-medium">
-          Try an example
+          Δοκίμασε ένα παράδειγμα
         </p>
         <div className="flex flex-wrap gap-2">
           {EXAMPLES.map((ex) => (
@@ -69,7 +69,7 @@ export default function TextPromptTab({ onGenerate, disabled }: TextPromptTabPro
         loading={disabled}
       >
         <Wand2 className="w-4 h-4" />
-        {disabled ? 'Generating…' : 'Generate stencil'}
+        {disabled ? 'Δημιουργία…' : 'Δημιουργία Στένσιλ'}
       </Button>
     </form>
   )

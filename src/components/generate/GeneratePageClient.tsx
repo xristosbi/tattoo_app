@@ -11,7 +11,7 @@ import StencilResult from './StencilResult'
 import UpgradeModal from './UpgradeModal'
 import ProgressBar from '@/components/ui/ProgressBar'
 import { ToastProvider } from '@/components/ui/Toast'
-import type { QuotaInfo } from '@/types'
+import type { SubscriptionTier } from '@/types'
 
 type Tab = 'image' | 'text'
 
@@ -24,9 +24,9 @@ interface GeneratePageClientProps {
   }
 }
 
-const tabs: { id: Tab; label: string; icon: typeof Image }[] = [
-  { id: 'image', label: 'Image to Stencil', icon: Image },
-  { id: 'text', label: 'Text to Stencil', icon: Type },
+const tabs: { id: Tab; label: string; labelMobile: string; icon: typeof Image }[] = [
+  { id: 'image', label: 'Εικόνα σε Στένσιλ', labelMobile: 'Εικόνα', icon: Image },
+  { id: 'text', label: 'Κείμενο σε Στένσιλ', labelMobile: 'Κείμενο', icon: Type },
 ]
 
 export default function GeneratePageClient({ quotaInfo }: GeneratePageClientProps) {
@@ -36,31 +36,25 @@ export default function GeneratePageClient({ quotaInfo }: GeneratePageClientProp
     useGeneration()
 
   const isActive = state === 'submitting' || state === 'processing'
-  const isUnlimited = quotaInfo.limit === -1
-
-  function handleError(err: string | null) {
-    if (err === 'quota_exceeded') {
-      setShowUpgrade(true)
-    }
-  }
+  const isUnlimited = quotaInfo.limit === -1 || quotaInfo.limit >= 999999
 
   return (
     <ToastProvider>
       <div className="max-w-4xl mx-auto">
         <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-ink-50">Generate stencil</h1>
+            <h1 className="text-2xl font-bold text-ink-50">Δημιουργία Στένσιλ</h1>
             <p className="text-ink-400 text-sm mt-1">
-              Upload a photo or describe your tattoo concept
+              Ανέβασε φωτογραφία ή περίγραψε το σχέδιό σου
             </p>
           </div>
           <div className="text-right min-w-[160px]">
             <p className="text-xs text-ink-400 mb-1.5">
               {isUnlimited
-                ? `${quotaInfo.used} generated this month`
-                : `${quotaInfo.used} / ${quotaInfo.limit} this month`}
+                ? `${quotaInfo.used} δημιουργίες αυτόν τον μήνα`
+                : `${quotaInfo.used} / ${quotaInfo.limit} αυτόν τον μήνα`}
             </p>
-            <ProgressBar value={quotaInfo.used} max={quotaInfo.limit} />
+            <ProgressBar value={quotaInfo.used} max={isUnlimited ? 1 : quotaInfo.limit} />
           </div>
         </div>
 
@@ -69,7 +63,7 @@ export default function GeneratePageClient({ quotaInfo }: GeneratePageClientProp
           <div className="space-y-4">
             {/* Tabs */}
             <div className="flex gap-1 bg-ink-900 border border-ink-600 p-1 rounded-xl">
-              {tabs.map(({ id, label, icon: Icon }) => (
+              {tabs.map(({ id, label, labelMobile, icon: Icon }) => (
                 <button
                   key={id}
                   onClick={() => {
@@ -88,7 +82,7 @@ export default function GeneratePageClient({ quotaInfo }: GeneratePageClientProp
                 >
                   <Icon className="w-4 h-4" />
                   <span className="hidden sm:inline">{label}</span>
-                  <span className="sm:hidden">{id === 'image' ? 'Image' : 'Text'}</span>
+                  <span className="sm:hidden">{labelMobile}</span>
                 </button>
               ))}
             </div>
@@ -115,7 +109,7 @@ export default function GeneratePageClient({ quotaInfo }: GeneratePageClientProp
                   <Image className="w-8 h-8 text-ink-600" />
                 </div>
                 <p className="text-ink-500 text-sm">
-                  Your stencil will appear here
+                  Το στένσιλ σου θα εμφανιστεί εδώ
                 </p>
               </div>
             )}
@@ -130,11 +124,11 @@ export default function GeneratePageClient({ quotaInfo }: GeneratePageClientProp
 
             {state === 'error' && (
               <div className="h-full min-h-[300px] lg:min-h-[400px] bg-ink-900 border border-red-500/20 rounded-xl flex flex-col items-center justify-center text-center p-8">
-                <p className="text-red-400 font-medium mb-2">Generation failed</p>
+                <p className="text-red-400 font-medium mb-2">Αποτυχία δημιουργίας</p>
                 <p className="text-ink-400 text-sm mb-6">
                   {error !== 'quota_exceeded'
-                    ? (error ?? 'Something went wrong. Please try again.')
-                    : 'You have used all your generations for this month.'}
+                    ? (error ?? 'Κάτι πήγε στραβά. Παρακαλώ δοκίμασε ξανά.')
+                    : 'Εξαντλήθηκαν οι δημιουργίες σου για αυτόν τον μήνα.'}
                 </p>
                 <button
                   onClick={() => {
@@ -146,7 +140,7 @@ export default function GeneratePageClient({ quotaInfo }: GeneratePageClientProp
                   }}
                   className="text-sm text-forge-300 hover:text-forge-200"
                 >
-                  {error === 'quota_exceeded' ? 'Upgrade plan' : 'Try again'}
+                  {error === 'quota_exceeded' ? 'Αναβάθμιση πλάνου' : 'Δοκίμασε ξανά'}
                 </button>
               </div>
             )}
@@ -157,7 +151,7 @@ export default function GeneratePageClient({ quotaInfo }: GeneratePageClientProp
       <UpgradeModal
         open={showUpgrade}
         onClose={() => setShowUpgrade(false)}
-        currentTier={quotaInfo.tier as 'free' | 'pro' | 'studio'}
+        currentTier={quotaInfo.tier as SubscriptionTier}
       />
     </ToastProvider>
   )

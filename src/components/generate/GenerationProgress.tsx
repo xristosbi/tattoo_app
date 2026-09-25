@@ -4,19 +4,19 @@ import { useEffect, useState } from 'react'
 import Spinner from '@/components/ui/Spinner'
 
 const IMAGE_STEPS = [
-  'Uploading image…',
-  'Detecting edges and lines…',
-  'Extracting line art…',
-  'Cleaning up stencil…',
-  'Finalizing output…',
+  'Ανέβασμα εικόνας…',
+  'Ανίχνευση γραμμών και περιγραμμάτων…',
+  'Εξαγωγή σχεδίου…',
+  'Καθαρισμός στένσιλ…',
+  'Οριστικοποίηση…',
 ]
 
 const TEXT_STEPS = [
-  'Interpreting your concept…',
-  'Generating illustration…',
-  'Extracting line art…',
-  'Converting to stencil…',
-  'Finalizing output…',
+  'Ανάλυση ιδέας…',
+  'Δημιουργία εικόνας…',
+  'Εξαγωγή σχεδίου…',
+  'Μετατροπή σε στένσιλ…',
+  'Οριστικοποίηση…',
 ]
 
 interface GenerationProgressProps {
@@ -45,7 +45,7 @@ export default function GenerationProgress({ type }: GenerationProgressProps) {
       </div>
 
       <p className="text-ink-200 font-medium mb-2">{steps[stepIndex]}</p>
-      <p className="text-ink-500 text-xs">This usually takes 20–45 seconds</p>
+      <p className="text-ink-500 text-xs">Συνήθως διαρκεί 20–60 δευτερόλεπτα</p>
 
       <div className="flex gap-1.5 mt-6">
         {steps.map((_, i) => (

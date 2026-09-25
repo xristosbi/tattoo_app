@@ -30,21 +30,27 @@ export function formatRelativeDate(dateString: string): string {
 }
 
 export function tierLabel(tier: SubscriptionTier): string {
-  const labels: Record<SubscriptionTier, string> = {
+  const labels: Record<string, string> = {
     free: 'Free',
+    starter: 'Starter',
+    plus: 'Plus',
+    professional: 'Professional',
     pro: 'Pro',
     studio: 'Studio',
   }
-  return labels[tier]
+  return labels[tier] ?? tier
 }
 
 export function tierColor(tier: SubscriptionTier): string {
-  const colors: Record<SubscriptionTier, string> = {
+  const colors: Record<string, string> = {
     free: 'text-ink-300 bg-ink-800 border-ink-600',
-    pro: 'text-forge-100 bg-forge-100/10 border-forge-100/30',
+    starter: 'text-forge-300 bg-forge-300/10 border-forge-300/30',
+    plus: 'text-forge-300 bg-forge-300/10 border-forge-300/30',
+    professional: 'text-forge-100 bg-forge-100/10 border-forge-100/30',
+    pro: 'text-forge-300 bg-forge-300/10 border-forge-300/30',
     studio: 'text-forge-100 bg-forge-100/15 border-forge-100/35',
   }
-  return colors[tier]
+  return colors[tier] ?? colors.free
 }
 
 export function getInitials(name: string | null | undefined, email: string): string {

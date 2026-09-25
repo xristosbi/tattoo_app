@@ -18,9 +18,9 @@ interface DashboardNavProps {
 }
 
 const navLinks = [
-  { href: '/generate', label: 'Generate', icon: Wand2 },
-  { href: '/history', label: 'History', icon: Clock },
-  { href: '/settings', label: 'Settings', icon: Settings },
+  { href: '/generate', label: 'Δημιουργία', icon: Wand2 },
+  { href: '/history', label: 'Ιστορικό', icon: Clock },
+  { href: '/settings', label: 'Ρυθμίσεις', icon: Settings },
 ]
 
 export default function DashboardNav({ user, profile, tier }: DashboardNavProps) {

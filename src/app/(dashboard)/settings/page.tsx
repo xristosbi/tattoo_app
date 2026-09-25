@@ -24,7 +24,7 @@ export default async function SettingsPage() {
   ])
 
   let teamMembers: TeamMemberWithProfile[] = []
-  if (subscription?.tier === 'studio') {
+  if (subscription?.tier === 'studio' || subscription?.tier === 'professional') {
     const { data } = await adminSupabase
       .from('team_members')
       .select('*, profile:profiles!member_id(full_name, avatar_url)')
@@ -37,13 +37,13 @@ export default async function SettingsPage() {
   return (
     <div className="max-w-2xl space-y-6">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-ink-50">Settings</h1>
-        <p className="text-ink-400 text-sm mt-1">Manage your account and subscription</p>
+        <h1 className="text-2xl font-bold text-ink-50">Ρυθμίσεις</h1>
+        <p className="text-ink-400 text-sm mt-1">Διαχείριση λογαριασμού και συνδρομής</p>
       </div>
 
       <SubscriptionPanel subscription={subscription} userEmail={user.email ?? ''} />
       <UsagePanel quotaInfo={quotaInfo} />
-      {subscription?.tier === 'studio' && (
+      {(subscription?.tier === 'studio' || subscription?.tier === 'professional') && (
         <TeamPanel teamMembers={teamMembers} />
       )}
     </div>

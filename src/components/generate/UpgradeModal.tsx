@@ -13,9 +13,9 @@ interface UpgradeModalProps {
 }
 
 export default function UpgradeModal({ open, onClose, currentTier }: UpgradeModalProps) {
-  const [loading, setLoading] = useState<'pro' | 'studio' | null>(null)
+  const [loading, setLoading] = useState<'starter' | 'plus' | 'professional' | null>(null)
 
-  async function handleUpgrade(plan: 'pro' | 'studio') {
+  async function handleUpgrade(plan: 'starter' | 'plus' | 'professional') {
     setLoading(plan)
     const res = await fetch('/api/billing/checkout', {
       method: 'POST',
@@ -28,46 +28,62 @@ export default function UpgradeModal({ open, onClose, currentTier }: UpgradeModa
   }
 
   return (
-    <Modal open={open} onClose={onClose} title="Upgrade your plan">
+    <Modal open={open} onClose={onClose} title="Αναβάθμισε το πλάνο σου">
       <div className="space-y-4">
         <p className="text-sm text-ink-400">
-          You&apos;ve used all your generations for this month. Upgrade to keep creating stencils.
+          Εξαντλήσατε τις δημιουργίες αυτού του μήνα. Αναβαθμίστε για να συνεχίσετε.
         </p>
 
         <div className="space-y-3">
-          {currentTier === 'free' && (
+          {(currentTier === 'free' || currentTier === 'starter') && (
             <div className="border border-forge-300/40 bg-forge-300/5 rounded-xl p-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="font-semibold text-ink-100">Pro</span>
-                <span className="text-forge-300 font-bold">€19/mo</span>
+                <span className="font-semibold text-ink-100">Starter</span>
+                <span className="text-forge-300 font-bold">€12/μήνα</span>
               </div>
-              <p className="text-xs text-ink-400 mb-3">100 generations/month</p>
+              <p className="text-xs text-ink-400 mb-3">20 δημιουργίες/μήνα</p>
               <Button
                 className="w-full"
-                loading={loading === 'pro'}
-                onClick={() => handleUpgrade('pro')}
+                loading={loading === 'starter'}
+                onClick={() => handleUpgrade('starter')}
               >
                 <Zap className="w-4 h-4" />
-                Upgrade to Pro
+                Αναβάθμιση σε Starter
               </Button>
             </div>
           )}
 
-          <div className="border border-ink-600 bg-ink-800 rounded-xl p-4">
-            <div className="flex items-center justify-between mb-2">
-              <span className="font-semibold text-ink-100">Studio</span>
-              <span className="text-forge-300 font-bold">€49/mo</span>
+          {currentTier !== 'professional' && (
+            <div className="border border-ink-600 bg-ink-800 rounded-xl p-4">
+              <div className="flex items-center justify-between mb-2">
+                <span className="font-semibold text-ink-100">Plus</span>
+                <span className="text-forge-300 font-bold">€29/μήνα</span>
+              </div>
+              <p className="text-xs text-ink-400 mb-3">60 δημιουργίες/μήνα</p>
+              <Button
+                variant={currentTier === 'free' || currentTier === 'starter' ? 'secondary' : 'primary'}
+                className="w-full"
+                loading={loading === 'plus'}
+                onClick={() => handleUpgrade('plus')}
+              >
+                Αναβάθμιση σε Plus
+              </Button>
             </div>
-            <p className="text-xs text-ink-400 mb-3">
-              Unlimited generations + up to 3 team members
-            </p>
+          )}
+
+          <div className="border border-forge-100/30 bg-forge-100/5 rounded-xl p-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="font-semibold text-forge-100">Professional</span>
+              <span className="text-forge-100 font-bold">€59/μήνα</span>
+            </div>
+            <p className="text-xs text-ink-400 mb-3">Απεριόριστες δημιουργίες</p>
             <Button
-              variant={currentTier === 'free' ? 'secondary' : 'primary'}
-              className="w-full"
-              loading={loading === 'studio'}
-              onClick={() => handleUpgrade('studio')}
+              variant="secondary"
+              className="w-full border-forge-100/30 text-forge-100 hover:bg-forge-100/10"
+              loading={loading === 'professional'}
+              onClick={() => handleUpgrade('professional')}
             >
-              Upgrade to Studio
+              Αναβάθμιση σε Professional
             </Button>
           </div>
         </div>

@@ -6,8 +6,20 @@ import type { SubscriptionTier } from '@/types'
 
 export const dynamic = 'force-dynamic'
 
+const TIER_LIMITS: Record<string, number> = {
+  free: 3,
+  starter: 20,
+  plus: 60,
+  professional: 999999,
+  pro: 100,
+  studio: 999999,
+}
+
 function tierFromPriceId(priceId: string | null): SubscriptionTier {
   if (!priceId) return 'free'
+  if (priceId === process.env.STRIPE_PROFESSIONAL_PRICE_ID) return 'professional'
+  if (priceId === process.env.STRIPE_PLUS_PRICE_ID) return 'plus'
+  if (priceId === process.env.STRIPE_STARTER_PRICE_ID) return 'starter'
   if (priceId === process.env.STRIPE_STUDIO_PRICE_ID) return 'studio'
   if (priceId === process.env.STRIPE_PRO_PRICE_ID) return 'pro'
   return 'free'
@@ -28,17 +40,30 @@ async function getUserIdFromCustomer(
 async function resetQuota(
   supabase: ReturnType<typeof createAdminClient>,
   userId: string,
-  periodStart: number,
+  _periodStart: number,
   periodEnd: number
 ) {
   await supabase
-    .from('generation_quotas')
+    .from('profiles')
     .update({
-      count: 0,
-      period_start: new Date(periodStart * 1000).toISOString(),
-      period_end: new Date(periodEnd * 1000).toISOString(),
+      generations_used: 0,
+      generations_reset_at: new Date(periodEnd * 1000).toISOString(),
     })
-    .eq('user_id', userId)
+    .eq('id', userId)
+}
+
+async function updateProfileTier(
+  supabase: ReturnType<typeof createAdminClient>,
+  userId: string,
+  tier: SubscriptionTier
+) {
+  await supabase
+    .from('profiles')
+    .update({
+      subscription_tier: tier,
+      generations_limit: TIER_LIMITS[tier] ?? 3,
+    })
+    .eq('id', userId)
 }
 
 export async function POST(request: Request) {
@@ -90,6 +115,7 @@ export async function POST(request: Request) {
           { onConflict: 'user_id' }
         )
 
+        await updateProfileTier(supabase, userId, tier)
         await resetQuota(
           supabase,
           userId,
@@ -123,6 +149,8 @@ export async function POST(request: Request) {
           },
           { onConflict: 'user_id' }
         )
+
+        await updateProfileTier(supabase, userId, tier)
         break
       }
 
@@ -142,6 +170,8 @@ export async function POST(request: Request) {
             cancel_at_period_end: false,
           })
           .eq('user_id', userId)
+
+        await updateProfileTier(supabase, userId, 'free')
 
         // Revoke all team members
         await supabase

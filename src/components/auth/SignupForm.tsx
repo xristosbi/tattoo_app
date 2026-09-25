@@ -25,7 +25,7 @@ export default function SignupForm({ defaultPlan }: SignupFormProps) {
     setError(null)
 
     if (password.length < 8) {
-      setError('Password must be at least 8 characters')
+      setError('Ο κωδικός πρέπει να έχει τουλάχιστον 8 χαρακτήρες')
       setLoading(false)
       return
     }
@@ -44,8 +44,7 @@ export default function SignupForm({ defaultPlan }: SignupFormProps) {
       return
     }
 
-    // If a paid plan was requested, redirect to checkout after signup
-    if (defaultPlan === 'pro' || defaultPlan === 'studio') {
+    if (defaultPlan === 'starter' || defaultPlan === 'plus' || defaultPlan === 'professional') {
       router.push(`/settings?plan=${defaultPlan}`)
     } else {
       router.push('/generate')
@@ -56,11 +55,11 @@ export default function SignupForm({ defaultPlan }: SignupFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <Input
-        label="Full name"
+        label="Ονοματεπώνυμο"
         type="text"
         value={name}
         onChange={(e) => setName(e.target.value)}
-        placeholder="Jane Doe"
+        placeholder="Γιάννης Παπαδόπουλος"
         autoComplete="name"
       />
       <Input
@@ -73,11 +72,11 @@ export default function SignupForm({ defaultPlan }: SignupFormProps) {
         autoComplete="email"
       />
       <Input
-        label="Password"
+        label="Κωδικός"
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
-        placeholder="At least 8 characters"
+        placeholder="Τουλάχιστον 8 χαρακτήρες"
         required
         autoComplete="new-password"
       />
@@ -87,10 +86,10 @@ export default function SignupForm({ defaultPlan }: SignupFormProps) {
         </p>
       )}
       <Button type="submit" loading={loading} className="w-full" size="lg">
-        Create account
+        Δημιουργία Λογαριασμού
       </Button>
       <p className="text-xs text-center text-ink-500">
-        By signing up, you agree to our terms of service and privacy policy.
+        Με την εγγραφή σου, αποδέχεσαι τους όρους χρήσης και την πολιτική απορρήτου.
       </p>
     </form>
   )

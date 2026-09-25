@@ -47,7 +47,7 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
         autoComplete="email"
       />
       <Input
-        label="Password"
+        label="Κωδικός"
         type="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
@@ -61,7 +61,7 @@ export default function LoginForm({ redirectTo }: LoginFormProps) {
         </p>
       )}
       <Button type="submit" loading={loading} className="w-full" size="lg">
-        Log in
+        Σύνδεση
       </Button>
     </form>
   )

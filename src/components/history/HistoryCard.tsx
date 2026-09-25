@@ -36,7 +36,7 @@ export default function HistoryCard({ generation }: HistoryCardProps) {
         {generation.stencilUrl ? (
           <img
             src={generation.stencilUrl}
-            alt={generation.prompt ?? 'Stencil'}
+            alt={generation.prompt ?? 'Στένσιλ'}
             className="w-full h-full object-contain"
           />
         ) : (
@@ -68,7 +68,7 @@ export default function HistoryCard({ generation }: HistoryCardProps) {
         <div className="flex items-center gap-1.5 mb-1">
           <div className="w-1.5 h-1.5 rounded-full bg-ink-500" />
           <span className="text-xs text-ink-500 uppercase tracking-wider font-medium">
-            {isImage ? 'Image' : 'Text'}
+            {isImage ? 'Εικόνα' : 'Κείμενο'}
           </span>
         </div>
         {generation.prompt && (

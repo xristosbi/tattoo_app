@@ -13,7 +13,7 @@ interface UsagePanelProps {
 }
 
 export default function UsagePanel({ quotaInfo }: UsagePanelProps) {
-  const isUnlimited = quotaInfo.limit === -1
+  const isUnlimited = quotaInfo.limit === -1 || quotaInfo.limit >= 999999
   const percent = isUnlimited
     ? 0
     : Math.round((quotaInfo.used / quotaInfo.limit) * 100)
@@ -23,7 +23,7 @@ export default function UsagePanel({ quotaInfo }: UsagePanelProps) {
       <CardHeader>
         <div className="flex items-center gap-2">
           <BarChart3 className="w-4 h-4 text-ink-400" />
-          <h2 className="font-semibold text-ink-100">Usage this month</h2>
+          <h2 className="font-semibold text-ink-100">Χρήση αυτόν τον μήνα</h2>
         </div>
       </CardHeader>
       <CardBody className="space-y-4">
@@ -33,7 +33,7 @@ export default function UsagePanel({ quotaInfo }: UsagePanelProps) {
             {!isUnlimited && (
               <span className="text-ink-400 text-sm ml-2">/ {quotaInfo.limit}</span>
             )}
-            <p className="text-xs text-ink-500 mt-0.5">stencils generated</p>
+            <p className="text-xs text-ink-500 mt-0.5">στένσιλ δημιουργήθηκαν</p>
           </div>
           {!isUnlimited && (
             <span
@@ -41,18 +41,18 @@ export default function UsagePanel({ quotaInfo }: UsagePanelProps) {
                 percent >= 80 ? 'text-red-400' : 'text-ink-400'
               }`}
             >
-              {percent}% used
+              {percent}% χρησιμοποιήθηκε
             </span>
           )}
         </div>
 
-        <ProgressBar value={quotaInfo.used} max={quotaInfo.limit} showLabel />
+        <ProgressBar value={quotaInfo.used} max={isUnlimited ? 1 : quotaInfo.limit} showLabel />
 
         {isUnlimited ? (
-          <p className="text-xs text-ink-500">Unlimited generations on Studio plan</p>
+          <p className="text-xs text-ink-500">Απεριόριστες δημιουργίες στο Professional πλάνο</p>
         ) : (
           <p className="text-xs text-ink-500">
-            Resets on {formatDate(quotaInfo.periodEnd)}
+            Επαναφέρεται στις {formatDate(quotaInfo.periodEnd)}
           </p>
         )}
       </CardBody>

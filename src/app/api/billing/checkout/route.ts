@@ -13,12 +13,16 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const { plan } = (await request.json()) as { plan: 'pro' | 'studio' }
+  const { plan } = (await request.json()) as { plan: 'starter' | 'plus' | 'professional' | 'pro' | 'studio' }
 
-  const priceId =
-    plan === 'studio'
-      ? process.env.STRIPE_STUDIO_PRICE_ID
-      : process.env.STRIPE_PRO_PRICE_ID
+  const PRICE_MAP: Record<string, string | undefined> = {
+    professional: process.env.STRIPE_PROFESSIONAL_PRICE_ID,
+    plus: process.env.STRIPE_PLUS_PRICE_ID,
+    starter: process.env.STRIPE_STARTER_PRICE_ID,
+    studio: process.env.STRIPE_STUDIO_PRICE_ID,
+    pro: process.env.STRIPE_PRO_PRICE_ID,
+  }
+  const priceId = PRICE_MAP[plan]
 
   if (!priceId) {
     return NextResponse.json({ error: 'Invalid plan' }, { status: 400 })

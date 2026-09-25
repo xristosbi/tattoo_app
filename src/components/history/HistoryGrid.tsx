@@ -15,9 +15,9 @@ export default function HistoryGrid({ generations }: HistoryGridProps) {
         <div className="w-12 h-12 bg-ink-800 rounded-xl flex items-center justify-center mx-auto mb-4">
           <Clock className="w-6 h-6 text-ink-600" />
         </div>
-        <p className="text-ink-400 font-medium">No stencils yet</p>
+        <p className="text-ink-400 font-medium">Δεν υπάρχουν στένσιλ ακόμα</p>
         <p className="text-ink-600 text-sm mt-1">
-          Your generated stencils will appear here
+          Τα στένσιλ που δημιουργείς θα εμφανίζονται εδώ
         </p>
       </div>
     )

@@ -11,16 +11,16 @@ export default function LoginPage({
   return (
     <div className="w-full max-w-md">
       <div className="text-center mb-8">
-        <h1 className="text-2xl font-bold text-ink-50 mb-2">Welcome back</h1>
-        <p className="text-ink-400 text-sm">Sign in to your Inkforge account</p>
+        <h1 className="text-2xl font-bold text-ink-50 mb-2">Καλώς ήρθες</h1>
+        <p className="text-ink-400 text-sm">Σύνδεσε στον λογαριασμό σου στο Inkforge</p>
       </div>
       <div className="card-surface p-6">
         <LoginForm redirectTo={searchParams.next ?? '/generate'} />
       </div>
       <p className="text-center text-sm text-ink-400 mt-6">
-        Don&apos;t have an account?{' '}
+        Δεν έχεις λογαριασμό;{' '}
         <Link href="/signup" className="text-forge-300 hover:text-forge-200 font-medium">
-          Sign up free
+          Εγγραφή δωρεάν
         </Link>
       </p>
     </div>

@@ -15,13 +15,13 @@ interface UseGenerationReturn {
   stencilUrl: string | null
   error: string | null
   generationId: string | null
-  generateFromImage: (file: File) => Promise<void>
+  generateFromImage: (file: File, notes?: string) => Promise<void>
   generateFromText: (prompt: string) => Promise<void>
   reset: () => void
 }
 
 const POLL_INTERVAL_MS = 3000
-const MAX_POLL_ATTEMPTS = 100 // ~5 minutes
+const MAX_POLL_ATTEMPTS = 60
 
 export function useGeneration(): UseGenerationReturn {
   const [state, setState] = useState<GenerationState>('idle')
@@ -57,7 +57,7 @@ export function useGeneration(): UseGenerationReturn {
       if (pollCountRef.current > MAX_POLL_ATTEMPTS) {
         stopPolling()
         setState('error')
-        setError('Generation timed out. Please try again.')
+        setError('Η δημιουργία έλαβε πολύ χρόνο. Παρακαλώ δοκίμασε ξανά.')
         return
       }
 
@@ -72,7 +72,7 @@ export function useGeneration(): UseGenerationReturn {
         } else if (data.status === 'failed') {
           stopPolling()
           setState('error')
-          setError(data.error ?? 'Generation failed')
+          setError(data.error ?? 'Η δημιουργία απέτυχε')
         }
       } catch {
         // Network error — keep polling
@@ -87,32 +87,46 @@ export function useGeneration(): UseGenerationReturn {
       setStencilUrl(null)
       setGenerationId(null)
 
-      const res = await fetch('/api/generate', { method: 'POST', body: formData })
-      const data = await res.json()
+      try {
+        const res = await fetch('/api/generate', { method: 'POST', body: formData })
+        const data = await res.json()
 
-      if (!res.ok) {
-        setState('error')
-        if (res.status === 429) {
-          setError('quota_exceeded')
-        } else {
-          setError(data.error ?? 'Failed to start generation')
+        if (!res.ok) {
+          setState('error')
+          if (res.status === 429) {
+            setError('quota_exceeded')
+          } else {
+            setError(data.error ?? 'Αποτυχία εκκίνησης δημιουργίας')
+          }
+          return
         }
-        return
-      }
 
-      // Both paths are async — poll for result
-      setGenerationId(data.generationId)
-      setState('processing')
-      startPolling(data.generationId)
+        setGenerationId(data.generationId)
+
+        // Synchronous: OpenAI returned the result immediately
+        if (data.status === 'completed' && data.stencilUrl) {
+          setStencilUrl(data.stencilUrl)
+          setState('completed')
+          return
+        }
+
+        // Fallback: start polling for async/legacy cases
+        setState('processing')
+        startPolling(data.generationId)
+      } catch (err) {
+        setState('error')
+        setError(err instanceof Error ? err.message : 'Αποτυχία δημιουργίας')
+      }
     },
     [startPolling]
   )
 
   const generateFromImage = useCallback(
-    async (file: File) => {
+    async (file: File, notes?: string) => {
       const formData = new FormData()
       formData.append('type', 'image_to_stencil')
       formData.append('file', file)
+      if (notes?.trim()) formData.append('notes', notes.trim())
       await submitGeneration(formData)
     },
     [submitGeneration]

@@ -9,7 +9,7 @@ const ACCEPTED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif']
 const MAX_SIZE_MB = 10
 
 interface ImageUploadTabProps {
-  onGenerate: (file: File) => Promise<void>
+  onGenerate: (file: File, notes?: string) => Promise<void>
   disabled?: boolean
 }
 
@@ -23,11 +23,11 @@ export default function ImageUploadTab({ onGenerate, disabled }: ImageUploadTabP
   function validateAndSetFile(f: File) {
     setFileError(null)
     if (!ACCEPTED_TYPES.includes(f.type)) {
-      setFileError('Please upload a JPEG, PNG, WebP, or GIF image.')
+      setFileError('Παρακαλώ ανέβασε εικόνα JPEG, PNG, WebP ή GIF.')
       return
     }
     if (f.size > MAX_SIZE_MB * 1024 * 1024) {
-      setFileError(`File too large. Maximum size is ${MAX_SIZE_MB}MB.`)
+      setFileError(`Το αρχείο είναι πολύ μεγάλο. Μέγιστο μέγεθος: ${MAX_SIZE_MB}MB.`)
       return
     }
     setFile(f)
@@ -79,10 +79,10 @@ export default function ImageUploadTab({ onGenerate, disabled }: ImageUploadTabP
           </div>
           <div>
             <p className="text-sm text-ink-200 font-medium">
-              Drop your image here
+              Σύρε το σχέδιό σου εδώ ή κάνε κλικ για ανέβασμα
             </p>
             <p className="text-xs text-ink-400 mt-1">
-              or click to browse · JPEG, PNG, WebP · Max {MAX_SIZE_MB}MB
+              JPEG, PNG, WebP · Μέγιστο {MAX_SIZE_MB}MB
             </p>
           </div>
           <input
@@ -100,7 +100,7 @@ export default function ImageUploadTab({ onGenerate, disabled }: ImageUploadTabP
         <div className="relative rounded-xl overflow-hidden border border-ink-600 bg-ink-900">
           <img
             src={preview}
-            alt="Upload preview"
+            alt="Προεπισκόπηση"
             className="w-full object-contain max-h-[300px]"
           />
           <button
@@ -128,7 +128,7 @@ export default function ImageUploadTab({ onGenerate, disabled }: ImageUploadTabP
         disabled={!file || disabled}
         loading={disabled}
       >
-        {disabled ? 'Generating…' : 'Generate stencil'}
+        {disabled ? 'Δημιουργία…' : 'Δημιουργία Στένσιλ'}
       </Button>
     </form>
   )
