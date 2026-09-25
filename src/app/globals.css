@@ -4,11 +4,11 @@
 
 :root {
   --bg-base:       #89F336;
-  --bg-card:       #122A1E;
-  --bg-elevated:   #193626;
-  --border:        #2B5240;
-  --text-primary:  #F0EDE8;
-  --text-secondary:#7A9B8A;
+  --bg-card:       #72CC2C;
+  --bg-elevated:   #65BF25;
+  --border:        #5AA020;
+  --text-primary:  #000000;
+  --text-secondary:#333333;
   --accent:        #89F336;
   --accent-hover:  #9BF54A;
   --gold:          #C9A84C;
@@ -34,22 +34,22 @@ body {
 }
 
 ::selection {
-  background-color: rgba(137, 243, 54, 0.35);
-  color: #0D1F17;
+  background-color: rgba(0, 0, 0, 0.2);
+  color: #000000;
 }
 
 ::-webkit-scrollbar {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #122A1E;
+  background: #72CC2C;
 }
 ::-webkit-scrollbar-thumb {
-  background: #2B5240;
+  background: #5AA020;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #3A6B55;
+  background: #3F7215;
 }
 
 @layer utilities {

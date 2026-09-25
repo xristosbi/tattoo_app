@@ -7,7 +7,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <nav className="px-6 h-16 flex items-center">
         <Link href="/" className="flex items-center gap-2">
           <div className="w-7 h-7 bg-forge-300 rounded-md flex items-center justify-center">
-            <Zap className="w-4 h-4 text-ink-950" />
+            <Zap className="w-4 h-4 text-black" />
           </div>
           <span className="font-bold text-lg text-ink-50">Inkforge</span>
         </Link>

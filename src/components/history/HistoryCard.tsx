@@ -57,7 +57,7 @@ export default function HistoryCard({ generation }: HistoryCardProps) {
             <button
               onClick={handleDownload}
               disabled={downloading}
-              className="bg-forge-300 hover:bg-forge-200 text-ink-950 p-2.5 rounded-xl font-semibold transition-colors shadow-lg"
+              className="bg-black hover:bg-zinc-800 text-white p-2.5 rounded-xl font-semibold transition-colors shadow-lg"
             >
               <Download className="w-5 h-5" />
             </button>

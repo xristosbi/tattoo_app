@@ -78,7 +78,7 @@ export default function LandingPage() {
             </Link>
             <Link
               href="/signup"
-              className="text-sm font-semibold bg-forge-300 hover:bg-forge-200 text-ink-950 px-4 py-2 rounded-lg transition-colors"
+              className="text-sm font-semibold bg-black hover:bg-zinc-800 text-white px-4 py-2 rounded-lg transition-colors"
             >
               {t('nav_start_free')}
             </Link>
@@ -102,7 +102,7 @@ export default function LandingPage() {
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
             href="/signup"
-            className="inline-flex items-center justify-center gap-2 bg-forge-300 hover:bg-forge-200 text-ink-950 font-semibold px-8 py-3.5 rounded-xl text-base transition-colors"
+            className="inline-flex items-center justify-center gap-2 bg-black hover:bg-zinc-800 text-white font-semibold px-8 py-3.5 rounded-xl text-base transition-colors"
           >
             {t('hero_cta_primary')}
           </Link>
@@ -209,7 +209,7 @@ export default function LandingPage() {
                 }`}
               >
                 {tier.highlighted && (
-                  <div className="absolute -top-px left-1/2 -translate-x-1/2 bg-forge-300 text-ink-950 text-[10px] font-mono font-medium tracking-widest uppercase px-3 py-1 rounded-b-lg">
+                  <div className="absolute -top-px left-1/2 -translate-x-1/2 bg-black text-white text-[10px] font-mono font-medium tracking-widest uppercase px-3 py-1 rounded-b-lg">
                     {t('most_popular')}
                   </div>
                 )}
@@ -234,7 +234,7 @@ export default function LandingPage() {
                   href={tier.href}
                   className={`block text-center py-2.5 rounded-lg font-semibold text-sm transition-colors ${
                     tier.highlighted
-                      ? 'bg-forge-300 hover:bg-forge-200 text-ink-950'
+                      ? 'bg-black hover:bg-zinc-800 text-white'
                       : tier.gold
                       ? 'bg-forge-100/10 border border-forge-100/30 text-forge-100 hover:bg-forge-100/18'
                       : 'border border-ink-600 hover:border-ink-500 text-ink-200 hover:text-ink-50'
