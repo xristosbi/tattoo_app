@@ -59,7 +59,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-2.5">
             <div className="w-7 h-7 bg-forge-300 rounded-md flex items-center justify-center flex-shrink-0">
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M7 1L8.6 5.1L13 5.8L10 8.7L10.7 13L7 11L3.3 13L4 8.7L1 5.8L5.4 5.1L7 1Z" fill="#F0EDE8"/>
+                <path d="M7 1L8.6 5.1L13 5.8L10 8.7L10.7 13L7 11L3.3 13L4 8.7L1 5.8L5.4 5.1L7 1Z" fill="#0D1F17"/>
               </svg>
             </div>
             <span className="font-playfair font-bold text-lg text-ink-50 tracking-wide">INKFORGE</span>
@@ -78,7 +78,7 @@ export default function LandingPage() {
             </Link>
             <Link
               href="/signup"
-              className="text-sm font-semibold bg-forge-300 hover:bg-forge-200 text-ink-50 px-4 py-2 rounded-lg transition-colors"
+              className="text-sm font-semibold bg-forge-300 hover:bg-forge-200 text-ink-950 px-4 py-2 rounded-lg transition-colors"
             >
               {t('nav_start_free')}
             </Link>
@@ -102,7 +102,7 @@ export default function LandingPage() {
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Link
             href="/signup"
-            className="inline-flex items-center justify-center gap-2 bg-forge-300 hover:bg-forge-200 text-ink-50 font-semibold px-8 py-3.5 rounded-xl text-base transition-colors"
+            className="inline-flex items-center justify-center gap-2 bg-forge-300 hover:bg-forge-200 text-ink-950 font-semibold px-8 py-3.5 rounded-xl text-base transition-colors"
           >
             {t('hero_cta_primary')}
           </Link>
@@ -153,7 +153,7 @@ export default function LandingPage() {
           <div className="rounded-2xl border border-forge-300/30 overflow-hidden">
             <div className="bg-ink-900 border-b border-forge-300/20 px-4 py-2.5 flex items-center justify-between">
               <span className="font-mono text-[10px] tracking-widest uppercase text-forge-200">{t('after_label')}</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-forge-200 shadow-[0_0_6px_#3B8C68]"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-forge-200 shadow-[0_0_6px_#89F336]"></span>
             </div>
             <div className="bg-[#FAFAF8] aspect-[4/3] flex items-center justify-center p-6">
               <svg viewBox="0 0 200 150" width="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -209,7 +209,7 @@ export default function LandingPage() {
                 }`}
               >
                 {tier.highlighted && (
-                  <div className="absolute -top-px left-1/2 -translate-x-1/2 bg-forge-300 text-ink-50 text-[10px] font-mono font-medium tracking-widest uppercase px-3 py-1 rounded-b-lg">
+                  <div className="absolute -top-px left-1/2 -translate-x-1/2 bg-forge-300 text-ink-950 text-[10px] font-mono font-medium tracking-widest uppercase px-3 py-1 rounded-b-lg">
                     {t('most_popular')}
                   </div>
                 )}
@@ -223,8 +223,8 @@ export default function LandingPage() {
                   {tier.features.map((f) => (
                     <li key={f} className="flex items-start gap-2.5 text-sm text-ink-300">
                       <svg width="15" height="15" viewBox="0 0 15 15" fill="none" className="flex-shrink-0 mt-0.5">
-                        <circle cx="7.5" cy="7.5" r="7" fill="#2D6A4F" fillOpacity=".3"/>
-                        <path d="M5 7.5L7 9.5L10.5 5.5" stroke="#3B8C68" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        <circle cx="7.5" cy="7.5" r="7" fill="#89F336" fillOpacity=".2"/>
+                        <path d="M5 7.5L7 9.5L10.5 5.5" stroke="#89F336" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
                       {f}
                     </li>
@@ -234,7 +234,7 @@ export default function LandingPage() {
                   href={tier.href}
                   className={`block text-center py-2.5 rounded-lg font-semibold text-sm transition-colors ${
                     tier.highlighted
-                      ? 'bg-forge-300 hover:bg-forge-200 text-ink-50'
+                      ? 'bg-forge-300 hover:bg-forge-200 text-ink-950'
                       : tier.gold
                       ? 'bg-forge-100/10 border border-forge-100/30 text-forge-100 hover:bg-forge-100/18'
                       : 'border border-ink-600 hover:border-ink-500 text-ink-200 hover:text-ink-50'
@@ -254,7 +254,7 @@ export default function LandingPage() {
           <div className="flex items-center gap-2.5">
             <div className="w-6 h-6 bg-forge-300 rounded flex items-center justify-center">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M6 1L7.3 4.4L11 5L8.5 7.4L9.1 11L6 9.4L2.9 11L3.5 7.4L1 5L4.7 4.4L6 1Z" fill="#F0EDE8"/>
+                <path d="M6 1L7.3 4.4L11 5L8.5 7.4L9.1 11L6 9.4L2.9 11L3.5 7.4L1 5L4.7 4.4L6 1Z" fill="#0D1F17"/>
               </svg>
             </div>
             <span className="font-playfair font-bold text-ink-50 tracking-wide">INKFORGE</span>

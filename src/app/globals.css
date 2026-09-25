@@ -9,8 +9,8 @@
   --border:        #2B5240;
   --text-primary:  #F0EDE8;
   --text-secondary:#7A9B8A;
-  --accent:        #2D6A4F;
-  --accent-hover:  #3B8C68;
+  --accent:        #89F336;
+  --accent-hover:  #9BF54A;
   --gold:          #C9A84C;
 }
 
@@ -34,8 +34,8 @@ body {
 }
 
 ::selection {
-  background-color: rgba(45, 106, 79, 0.35);
-  color: #D0E8DC;
+  background-color: rgba(137, 243, 54, 0.35);
+  color: #0D1F17;
 }
 
 ::-webkit-scrollbar {
