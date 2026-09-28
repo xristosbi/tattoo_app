@@ -122,11 +122,11 @@ export default function LandingPage() {
             <div className="bg-ink-900 border-b border-ink-600 px-4 py-2.5">
               <span className="font-mono text-[10px] tracking-widest uppercase text-ink-400">{t('before_label')}</span>
             </div>
-            <div className="bg-ink-800 aspect-[4/3] overflow-hidden">
+            <div className="bg-ink-800 min-h-[500px] overflow-hidden">
               <img
-                src="/images/original.jpg"
+                src="/images/stencil.jpg"
                 alt="Πρωτότυπο Σχέδιο"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
             </div>
           </div>
@@ -149,11 +149,11 @@ export default function LandingPage() {
               <span className="font-mono text-[10px] tracking-widest uppercase text-black">{t('after_label')}</span>
               <span className="w-1.5 h-1.5 rounded-full bg-black"></span>
             </div>
-            <div className="aspect-[4/3] overflow-hidden">
+            <div className="bg-white min-h-[500px] overflow-hidden">
               <img
-                src="/images/stencil.jpg"
+                src="/images/original.jpg"
                 alt="Αποτέλεσμα Στένσιλ"
-                className="w-full h-full object-cover"
+                className="w-full h-full object-contain"
               />
             </div>
           </div>
