@@ -91,10 +91,8 @@ export default function LandingPage() {
         <div className="inline-flex items-center gap-2 bg-forge-300/10 border border-forge-300/25 text-forge-200 text-xs font-mono tracking-widest uppercase px-3 py-1 rounded-full mb-8">
           {t('hero_badge')}
         </div>
-        <h1 className="font-playfair text-4xl sm:text-5xl md:text-[62px] font-black text-ink-50 leading-[1.06] text-balance mb-6">
-          {t('hero_h1_1')}{' '}
-          <em className="text-forge-100 not-italic">{t('hero_h1_italic')}</em>{' '}
-          {t('hero_h1_2')}
+        <h1 className="font-playfair text-4xl sm:text-5xl md:text-[62px] font-black text-black leading-[1.06] text-balance mb-6">
+          {t('hero_h1_1')}
         </h1>
         <p className="text-base sm:text-lg text-ink-300 max-w-lg mx-auto mb-10 leading-relaxed">
           {t('hero_subtitle')}
@@ -124,47 +122,39 @@ export default function LandingPage() {
             <div className="bg-ink-900 border-b border-ink-600 px-4 py-2.5">
               <span className="font-mono text-[10px] tracking-widest uppercase text-ink-400">{t('before_label')}</span>
             </div>
-            <div className="bg-ink-800 aspect-[4/3] flex items-center justify-center p-6">
-              <svg viewBox="0 0 200 150" width="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <ellipse cx="100" cy="68" rx="42" ry="50" stroke="#4A6B58" strokeWidth="2.5" opacity=".7"/>
-                <ellipse cx="84" cy="72" rx="12" ry="9" stroke="#4A6B58" strokeWidth="2" opacity=".6"/>
-                <ellipse cx="116" cy="72" rx="12" ry="9" stroke="#4A6B58" strokeWidth="2" opacity=".6"/>
-                <path d="M96 85 L100 95 L104 85" stroke="#4A6B58" strokeWidth="2" opacity=".6"/>
-                <path d="M86 107 L88 117 L91 107 M94 107 L96 117 L99 107 M102 107 L104 117 L107 107 M110 107 L112 117 L115 107" stroke="#4A6B58" strokeWidth="2" opacity=".5"/>
-                <path d="M60 100 C50 95 45 88 48 80" stroke="#4A6B58" strokeWidth="1.5" opacity=".4"/>
-                <ellipse cx="100" cy="60" rx="28" ry="22" stroke="#4A6B58" strokeWidth="1.5" strokeDasharray="3 3" opacity=".3"/>
-              </svg>
+            <div className="bg-ink-800 aspect-[4/3] overflow-hidden">
+              <img
+                src="/images/original.jpg"
+                alt="Πρωτότυπο Σχέδιο"
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
 
           {/* Arrow */}
           <div className="hidden sm:flex w-10 h-10 rounded-full bg-ink-800 border border-ink-600 items-center justify-center flex-shrink-0 mx-auto">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M3 8H13M13 8L9.5 4.5M13 8L9.5 11.5" stroke="#7A9B8A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M3 8H13M13 8L9.5 4.5M13 8L9.5 11.5" stroke="#000000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
           <div className="flex sm:hidden justify-center">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path d="M10 3V17M10 17L5.5 12.5M10 17L14.5 12.5" stroke="#7A9B8A" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M10 3V17M10 17L5.5 12.5M10 17L14.5 12.5" stroke="#000000" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
 
           {/* Stencil output */}
-          <div className="rounded-2xl border border-forge-300/30 overflow-hidden">
-            <div className="bg-ink-900 border-b border-forge-300/20 px-4 py-2.5 flex items-center justify-between">
-              <span className="font-mono text-[10px] tracking-widest uppercase text-forge-200">{t('after_label')}</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-forge-200 shadow-[0_0_6px_#89F336]"></span>
+          <div className="rounded-2xl border border-black overflow-hidden">
+            <div className="bg-ink-900 border-b border-black/20 px-4 py-2.5 flex items-center justify-between">
+              <span className="font-mono text-[10px] tracking-widest uppercase text-black">{t('after_label')}</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-black"></span>
             </div>
-            <div className="bg-[#FAFAF8] aspect-[4/3] flex items-center justify-center p-6">
-              <svg viewBox="0 0 200 150" width="100%" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <ellipse cx="100" cy="68" rx="42" ry="50" stroke="#1a1a1a" strokeWidth="3"/>
-                <ellipse cx="84" cy="72" rx="12" ry="9" stroke="#1a1a1a" strokeWidth="2.5" fill="#1a1a1a"/>
-                <ellipse cx="116" cy="72" rx="12" ry="9" stroke="#1a1a1a" strokeWidth="2.5" fill="#1a1a1a"/>
-                <path d="M96 85 L100 95 L104 85" stroke="#1a1a1a" strokeWidth="2.5"/>
-                <path d="M86 107 L88 117 L91 107 M94 107 L96 117 L99 107 M102 107 L104 117 L107 107 M110 107 L112 117 L115 107" stroke="#1a1a1a" strokeWidth="2.5"/>
-                <path d="M60 100 C50 95 45 88 48 80" stroke="#1a1a1a" strokeWidth="2.5"/>
-                <path d="M140 100 C150 95 155 88 152 80" stroke="#1a1a1a" strokeWidth="2.5"/>
-              </svg>
+            <div className="aspect-[4/3] overflow-hidden">
+              <img
+                src="/images/stencil.jpg"
+                alt="Αποτέλεσμα Στένσιλ"
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
         </div>
@@ -178,12 +168,12 @@ export default function LandingPage() {
         <p className="text-center text-ink-300 text-sm mb-12">{t('features_subtitle')}</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           {features.map((f) => (
-            <div key={f.title} className="bg-ink-900 border border-ink-600 rounded-xl p-6 hover:border-ink-500 transition-colors">
-              <div className="w-9 h-9 bg-forge-300/12 border border-forge-300/25 rounded-lg flex items-center justify-center mb-4">
-                <f.icon className="w-4 h-4 text-forge-200" />
+            <div key={f.title} className="bg-black border border-[#89F336] rounded-xl p-6 transition-colors">
+              <div className="w-9 h-9 bg-[#89F336]/10 border border-[#89F336] rounded-lg flex items-center justify-center mb-4">
+                <f.icon className="w-4 h-4 text-[#89F336]" />
               </div>
-              <h3 className="font-semibold text-ink-50 mb-2">{f.title}</h3>
-              <p className="text-sm text-ink-300 leading-relaxed">{f.description}</p>
+              <h3 className="font-semibold text-[#89F336] mb-2">{f.title}</h3>
+              <p className="text-sm text-[#89F336]/80 leading-relaxed">{f.description}</p>
             </div>
           ))}
         </div>
@@ -200,28 +190,22 @@ export default function LandingPage() {
             {pricing.map((tier) => (
               <div
                 key={tier.name}
-                className={`rounded-2xl border p-6 flex flex-col relative ${
-                  tier.highlighted
-                    ? 'bg-ink-800 border-forge-300/50'
-                    : tier.gold
-                    ? 'bg-ink-900 border-forge-100/25'
-                    : 'bg-ink-900 border-ink-600'
-                }`}
+                className="bg-black border border-[#89F336] rounded-2xl p-6 flex flex-col relative"
               >
                 {tier.highlighted && (
-                  <div className="absolute -top-px left-1/2 -translate-x-1/2 bg-black text-white text-[10px] font-mono font-medium tracking-widest uppercase px-3 py-1 rounded-b-lg">
+                  <div className="absolute -top-px left-1/2 -translate-x-1/2 bg-[#89F336] text-black text-[10px] font-mono font-medium tracking-widest uppercase px-3 py-1 rounded-b-lg">
                     {t('most_popular')}
                   </div>
                 )}
-                <div className="font-mono text-[10px] tracking-widest uppercase text-ink-400 mb-3">{tier.name}</div>
+                <div className="font-mono text-[10px] tracking-widest uppercase text-[#89F336]/60 mb-3">{tier.name}</div>
                 <div className="flex items-baseline gap-1 mb-1">
-                  <span className="font-playfair text-[38px] font-bold text-ink-50 leading-none">{tier.price}</span>
+                  <span className="font-playfair text-[38px] font-bold text-[#89F336] leading-none">{tier.price}</span>
                 </div>
-                <div className="text-xs text-ink-400 mb-4 font-mono">{tier.period}</div>
-                <div className="text-sm font-medium text-ink-100 mb-4">{tier.gens}</div>
+                <div className="text-xs text-[#89F336]/60 mb-4 font-mono">{tier.period}</div>
+                <div className="text-sm font-medium text-[#89F336] mb-4">{tier.gens}</div>
                 <ul className="space-y-2.5 flex-1 mb-6">
                   {tier.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2.5 text-sm text-ink-300">
+                    <li key={f} className="flex items-start gap-2.5 text-sm text-[#89F336]/80">
                       <svg width="15" height="15" viewBox="0 0 15 15" fill="none" className="flex-shrink-0 mt-0.5">
                         <circle cx="7.5" cy="7.5" r="7" fill="#89F336" fillOpacity=".2"/>
                         <path d="M5 7.5L7 9.5L10.5 5.5" stroke="#89F336" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -232,13 +216,7 @@ export default function LandingPage() {
                 </ul>
                 <Link
                   href={tier.href}
-                  className={`block text-center py-2.5 rounded-lg font-semibold text-sm transition-colors ${
-                    tier.highlighted
-                      ? 'bg-black hover:bg-zinc-800 text-white'
-                      : tier.gold
-                      ? 'bg-forge-100/10 border border-forge-100/30 text-forge-100 hover:bg-forge-100/18'
-                      : 'border border-ink-600 hover:border-ink-500 text-ink-200 hover:text-ink-50'
-                  }`}
+                  className="block text-center py-2.5 rounded-lg font-semibold text-sm transition-colors border border-[#89F336] text-[#89F336] hover:bg-[#89F336] hover:text-black"
                 >
                   {tier.cta}
                 </Link>
