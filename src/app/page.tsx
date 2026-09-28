@@ -127,6 +127,7 @@ export default function LandingPage() {
                 src="/images/stencil.jpg"
                 alt="Πρωτότυπο Σχέδιο"
                 className="w-full h-full object-contain"
+                style={{ minHeight: '500px', objectFit: 'contain' }}
               />
             </div>
           </div>
@@ -154,6 +155,7 @@ export default function LandingPage() {
                 src="/images/original.jpg"
                 alt="Αποτέλεσμα Στένσιλ"
                 className="w-full h-full object-contain"
+                style={{ minHeight: '500px', objectFit: 'contain' }}
               />
             </div>
           </div>
